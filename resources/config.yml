@@ -1,0 +1,99 @@
+---
+#はにー鯖設定ファイル
+#trueで有効になります
+#falseで無効になります
+
+#DBの設定
+ address: 127.0.0.1
+ user: root
+ password: password
+ timeout: 10
+
+#サーバーの設定
+Server:
+ #サーバー名のカスタム
+ motd: §6{servername} §5[§a{nowplayers}§5/§a{maxplayers}§5]
+ #デバッグモードの有効化
+ debug: false
+ #圧縮レベルの設定
+ compression-level: 7
+ #一時インベントリデータの保存方法
+ #db = データベース
+ #file = ファイル
+ #cache = キャッシュ変数
+ tempinventory-savetype: file
+ #一時インベントリデータの保存先(保存方法でfileを選んだときのみ有効)
+ tempinventory-filepath: {datapath}tempinv/
+
+#パスワード管理設定
+Password:
+ #ハッシュの種類の設定
+ hash-type: md5
+ #ハッシュ回数
+ hash-count: 1000
+
+#ゲームの設定
+Game:
+ #ゲーム開始人数
+ start-players: 16
+ #1チームの最大人数
+ max-players: 8
+ #ゲーム終了後に再起動
+ server-restart: false
+
+#ワールドの設定
+Level:
+ #デフォルトワールド名
+ default-world: world
+ #ゲームワールドの数
+ world-count: 0
+ #TODO : ゲームワールドの管理設定
+
+#ポイントの管理
+Point:
+ #石炭鉱石
+ coal-ore: 1
+ #鉄鉱石
+ iron-ore: 2
+ #銅鉱石
+ copper-ore: 3
+ #銀鉱石
+ silver-ore: 5
+ #金鉱石
+ gold-ore: 8
+ #ダイヤモンド鉱石
+ diamond-ore: 10
+ #ラピスラズリ鉱石
+ lapislazuli-ore: 5
+ #レッドストーン鉱石
+ redstone-ore: 2
+
+#鉱石の換金価額
+#注意 : この換金価額は価格変動が行われる前のデフォルトの物であり、実際にはこの値ではありません。
+#また、価格変動が無効化されていると以下の換金価額が適用されます。
+Exchange:
+ #価格変動の有効化
+ price-change: true
+ #価格変動の間隔(秒)(価格変動が有効化されてるときのみ有効)
+ price-change-time: 600
+ #価格変動の範囲(デフォルトからの変動範囲)
+ #注意 : デフォルト値からマイナスになる変動は行われません。
+ price-change-range: 1000
+ #石炭鉱石
+ coal-ore: 200
+ #鉄鉱石
+ iron-ore: 800
+ #銅鉱石
+ copper-ore: 1200
+ #銀鉱石
+ silver-ore: 2000
+ #金鉱石
+ gold-ore: 2300
+ #ダイヤモンド鉱石
+ diamond-ore: 7000
+ #ラピスラズリ鉱石
+ lapislazuli-ore: 1300
+ #レッドストーン鉱石
+ redstone-ore: 400
+
+...

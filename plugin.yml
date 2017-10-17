@@ -1,0 +1,42 @@
+name: HoneyServer
+main: Honey\Main
+version: 1.0.0
+api:
+  - 1.13.0
+  - 2.0.0
+  - 3.0.0
+  - 3.0.0-ALPHA5
+load: STARTUP
+author: towa0131
+authors: [towa0131, HoneyServerDeveloperTeam]
+description: HoneyServer's System Plugin
+website: https://honey-mc.net
+commands:
+ loadreceipes:
+  description: "レシピを再ロードします"
+  usage: "/loadrecipes"
+ reconnect:
+  description: "サーバーへ再接続します"
+  usage: "/reconnect"
+  aliases: [rc]
+ box:
+  description: "アイテムボックスを開きます(ロビーでのみ使えます)"
+  usage: "/box"
+ status:
+  description: "ユーザーのステータスを確認します"
+  usage: "/status <name>"
+  aliases: [stat]
+ report:
+  description: "違反ユーザーを報告します"
+  usage: "/report <name> <reason>"
+  aliases: [rp]
+ union:
+  description: "組合関係のコマンドです"
+  usage: "/union [join|quit|create|invite|deny|destroy]"
+ entry:
+  description: "ゲームへ参加します"
+  usage: "/entry"
+  aliases: [e, join]
+permissions:
+ admin.command:
+  default: op
