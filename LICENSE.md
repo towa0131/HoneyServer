@@ -3,7 +3,7 @@
 あなたはライセンス([CC BY-NC-ND 4.0](https://creativecommons.org/licenses/by-nc-nd/4.0/legalcode))に承諾したことになります。
 ---
 ## CC BY-NC-ND 4.0
-当プロジェクトのライセンスは原則として**[CC BY-NC-ND 4.0](https://creativecommons.org/licenses/by-nc-nd/4.0/deed.ja)**が適用されます。
+当プロジェクトのライセンスは原則として[CC BY-NC-ND 4.0](https://creativecommons.org/licenses/by-nc-nd/4.0/legalcode)が適用されます。
 また、下記の追加のライセンスが[CC BY-NC-ND 4.0](https://creativecommons.org/licenses/by-nc-nd/4.0/legalcode)に矛盾している場合などには
 追加のライセンスが優先的に適用されます。
 ---
