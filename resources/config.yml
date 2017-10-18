@@ -8,6 +8,7 @@ DB:
  address: 127.0.0.1
  user: root
  password: password
+ database: mysql
  timeout: 10
 
 #サーバーの設定
@@ -37,6 +38,8 @@ Password:
 Game:
  #ゲーム開始人数
  start-players: 16
+ #ゲーム開始時間(秒)(人数が揃ってからゲーム開始までの時間)
+ wait-time: 60
  #1チームの最大人数
  max-players: 8
  #ゲーム終了後に再起動
