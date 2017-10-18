@@ -4,6 +4,7 @@
 #falseで無効になります
 
 #DBの設定
+DB:
  address: 127.0.0.1
  user: root
  password: password
