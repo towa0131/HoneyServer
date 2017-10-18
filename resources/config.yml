@@ -25,7 +25,7 @@ Server:
  #cache = キャッシュ変数
  tempinventory-savetype: file
  #一時インベントリデータの保存先(保存方法でfileを選んだときのみ有効)
- tempinventory-filepath: {datapath}tempinv/
+ tempinventory-filepath: datapath/tempinv
 
 #パスワード管理設定
 Password:
