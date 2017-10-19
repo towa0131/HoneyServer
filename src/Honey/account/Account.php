@@ -61,7 +61,7 @@ class Account{
 	/**
 	   * @return string | プレイヤーの最終ログイン日時
 	   */
-	public function getCid(){
+	public function getLastLogin(){
 		return $this->data["lastlogin"];
 	}
 
