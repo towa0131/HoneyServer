@@ -63,7 +63,6 @@ class Main extends PluginBase implements Listener{
 	}
 
 	public function onMain(){
-		var_dump(AccountManager::getAccountByXuid("1234"));
 		switch($this->status){
 			case self::STATUS_WAIT:
 				if(count($this->getServer()->getOnlinePlayers()) >= $this->config->getNested("Game.start-players")){
