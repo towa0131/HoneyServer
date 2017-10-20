@@ -105,6 +105,38 @@ class AccountManager{
 	}
 
 	/**
+	   * @param string $xuid
+	   * @param string $name
+	   * @param string $ip
+	   * @param string $passwd
+	   * @param int $honey
+	   * @param string $lang
+	   * @param string $skin
+	   * @param string $lastlogin
+	   *
+	   * @return bool
+	   */
+	public static function registerAccount($xuid, $name, $ip, $passwd, $honey, $lang, $skin, $lastlogin){
+		if(self::hasAccount($xuid)){
+			return false;
+		}
+		$db = DB::getDB();
+		$query = "INSERT INTO xuids(xuid , name) VALUES ('" . $xuid . "', '" . $name . "')";
+		 if(!$db->query($query)){
+			return false;
+		}
+		$query = "INSERT INTO logindata(xuid , ip, password) VALUES ('" . $xuid . "', '" . $ip . "', '" . $passwd . "')";
+		 if(!$db->query($query)){
+			return false;
+		}
+		$query = "INSERT INTO playerdata(xuid , honey, language, skin, lastlogin) VALUES ('" . $xuid . "', '" . $honey . "', '" . $lang . "', '" . $skin . "', '" . $lastlogin . "')";
+		 if(!$db->query($query)){
+			return false;
+		}
+		return true;
+	}
+
+	/**
 	   * @param string $name
 	   *
 	   * @return string

@@ -96,7 +96,7 @@ class Account{
 		if($result = $db->query($data)){
 			while($row = $result->fetch_assoc()){
 				if($this->xuid == $row["xuid"]){
-					$this->data["honey"] = (int)$row["honey"];
+					$this->data["honey"] = $row["honey"];
 					$this->data["language"] = $row["language"];
 					$this->data["skin"] = $row["skin"];
 					$this->data["lastlogin"] = $row["lastlogin"];
