@@ -27,6 +27,13 @@ Server:
  #一時インベントリデータの保存先(保存方法でfileを選んだときのみ有効)
  tempinventory-filepath: datapath/tempinv
 
+# ユーザー設定
+User:
+ #デフォルトの言語
+ default-lang: jpn
+ #初期はにい
+ default-honey: 0
+
 #パスワード管理設定
 Password:
  #ハッシュの種類の設定
