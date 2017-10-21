@@ -79,6 +79,7 @@ use Honey\form\RegisterForm;
 use Honey\form\UserSettingsForm;
 
 use Honey\task\RegisterFormTask;
+use Honey\task\SendFaceTask;
 
 class Main extends PluginBase implements Listener{
 
@@ -157,6 +158,7 @@ class Main extends PluginBase implements Listener{
 				$player->sendMessage("§a[はにー]§bアカウントの読み込みに成功！");
 			}
 		}
+		 $this->getServer()->getScheduler()->scheduleAsyncTask(new SendFaceTask($name, $player->getSkinData()));
 		$this->sendLobbyItem($player);
 	}
 

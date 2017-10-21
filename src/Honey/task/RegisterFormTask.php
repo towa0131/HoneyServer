@@ -8,13 +8,19 @@ use pocketmine\scheduler\PluginTask;
 
 use pocketmine\network\mcpe\protocol\ModalFormRequestPacket;
 
+use pocketmine\Player;
+
 use Honey\FormIds;
 
 use Honey\form\RegisterForm;
 
 class RegisterFormTask extends PluginTask{
 
-	public function __construct(PluginBase $owner, $player){
+	/**
+	   * @param PluginBase $owner
+	   * @param Player $player
+	   */
+	public function __construct(PluginBase $owner, Player $player){
 		parent::__construct($owner);
 		$this->player = $player;
 	}
