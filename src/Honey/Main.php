@@ -24,6 +24,7 @@ use pocketmine\event\player\PlayerRespawnEvent;
 use pocketmine\event\player\PlayerDeathEvent;
 use pocketmine\event\player\PlayerChatEvent;
 use pocketmine\event\player\PlayerPreLoginEvent;
+use pocketmine\event\player\PlayerInteractEvent;
 
 use pocketmine\event\block\BlockBreakEvent;
 
@@ -57,6 +58,8 @@ use pocketmine\nbt\tag\CompoundTag;
 use pocketmine\nbt\tag\IntTag;
 use pocketmine\nbt\tag\ListTag;
 use pocketmine\nbt\tag\StringTag;
+
+use pocketmine\math\Vector3;
 
 use Honey\utils\DB;
 
@@ -105,6 +108,7 @@ class Main extends PluginBase implements Listener{
 			$this->config->getNested("DB.database"),
 			$this->config->getNested("DB.timeout"));
 		self::$instance = $this;
+		$commands = new CommandManager($this);
 		$this->getServer()->getScheduler()->scheduleRepeatingTask(new CallbackTask([$this,"onMain"]), 20);
 		$this->getLogger()->info("§a[はにー]§bゲームを初期化しています...");
 		$this->time = 0;
@@ -148,6 +152,7 @@ class Main extends PluginBase implements Listener{
 			//そのまま送信するとバグる為、タイミングをずらして送信する
 			$task = new RegisterFormTask($this, $player);
 			$this->getServer()->getScheduler()->scheduleDelayedTask($task, 15);
+			$player->sendMessage("§a[はにー]§cもし、登録フォームが出なかったら/registerと入力してください。");
 			$player->setImmobile(true); //移動できなくする(登録回避の回避)
 		}else{
 			$player->sendMessage("§a[はにー]§bアカウントを読み込んでいます...");
@@ -165,6 +170,25 @@ class Main extends PluginBase implements Listener{
 	public function onBreak(BlockBreakEvent $event){
 		$player = $event->getPlayer();
 		$block = $event->getBlock();
+	}
+
+	public function onInteract(PlayerInteractEvent $event){
+		$player = $event->getPlayer();
+		$name = $player->getName();
+		$block = $event->getBlock();
+		$x = $block->getX();
+		$y = $block->getY();
+		$z = $block->getZ();
+		/* のちのち何かに使うかも程度
+		if($block->getID() == 176 || $block->getID() == 177){
+			$vec = new Vector3($x, $y, $z);
+			$tile = $player->getLevel()->getTile($vec);
+			$tile->setBaseColor(11);
+			$tile->addPattern("ts", 14);
+			$tile->addPattern("bs", 14);
+			$tile->addPattern("moj", 1);
+		}
+		*/
 	}
 
 	public function onReceive(DataPacketReceiveEvent $event){
