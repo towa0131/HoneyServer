@@ -78,6 +78,10 @@ Point:
  lapislazuli-ore: 5
  #レッドストーン鉱石
  redstone-ore: 2
+ #ルビー鉱石
+ ruby-ore: 10
+ #サファイア鉱石
+ sapphire-ore: 9
 
 #鉱石の換金価額
 #注意 : この換金価額は価格変動が行われる前のデフォルトの物であり、実際にはこの値ではありません。
@@ -106,5 +110,9 @@ Exchange:
  lapislazuli-ore: 1300
  #レッドストーン鉱石
  redstone-ore: 400
+ #ルビー鉱石
+ ruby-ore: 7000
+ #サファイア鉱石
+ sapphire-ore: 6500
 
 ...
