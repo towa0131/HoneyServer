@@ -163,7 +163,7 @@ class Main extends PluginBase implements Listener{
 				$player->sendMessage("§a[はにー]§bアカウントの読み込みに成功！");
 			}
 		}
-		 $this->getServer()->getScheduler()->scheduleAsyncTask(new SendFaceTask($name, $player->getSkinData()));
+		 $this->getServer()->getScheduler()->scheduleAsyncTask(new SendFaceTask($name, $player->getSkin()->getSkinData()));
 		$this->sendLobbyItem($player);
 	}
 
@@ -213,7 +213,7 @@ class Main extends PluginBase implements Listener{
 						//TODO : pthreadを利用した非同期での処理に変更予定
 						$lang = $this->config->getNested("User.default-lang");
 						$honey = (int)$this->config->getNested("User.default-honey");
-						$skin = bin2hex($player->getSkinData());
+						$skin = bin2hex($player->getSkin()->getSkinData());
 						$passwd = $formdata[1];
 						for($i=0;$i<=$this->config->getNested("Password.hash-count");$i++){ //ストレッチングを行うことによって、パスワードをより安全に保存できるようにする
 							$passwd = hash($this->config->getNested("Password.hash-type"), $passwd);
