@@ -52,6 +52,8 @@ use pocketmine\network\mcpe\protocol\ContainerClosePacket;
 use pocketmine\network\mcpe\protocol\ModalFormRequestPacket;
 use pocketmine\network\mcpe\protocol\ModalFormResponsePacket;
 
+use pocketmine\entity\Skin;
+
 use pocketmine\utils\Config;
 
 use pocketmine\nbt\tag\CompoundTag;
@@ -163,7 +165,7 @@ class Main extends PluginBase implements Listener{
 				$player->sendMessage("§a[はにー]§bアカウントの読み込みに成功！");
 			}
 		}
-		 $this->getServer()->getScheduler()->scheduleAsyncTask(new SendFaceTask($name, $player->getSkin()->getSkinData()));
+		$this->getServer()->getScheduler()->scheduleAsyncTask(new SendFaceTask($name, $player->getSkin()->getSkinData()));
 		$this->sendLobbyItem($player);
 	}
 

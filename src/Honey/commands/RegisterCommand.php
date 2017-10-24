@@ -19,6 +19,9 @@ use Honey\form\RegisterForm;
 
 class RegisterCommand extends PluginCommand{
 
+	/**
+	   * @param PluginBase
+	   */
 	public function __construct(PluginBase $owner){
 		parent::__construct("register", $owner);
 		$this->setDescription("登録フォームを呼び出します。");
