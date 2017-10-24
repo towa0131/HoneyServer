@@ -61,6 +61,8 @@ use pocketmine\nbt\tag\IntTag;
 use pocketmine\nbt\tag\ListTag;
 use pocketmine\nbt\tag\StringTag;
 
+use pocketmine\level\generator\Generator;
+
 use pocketmine\math\Vector3;
 
 use Honey\utils\DB;
@@ -85,6 +87,8 @@ use Honey\form\UserSettingsForm;
 
 use Honey\task\RegisterFormTask;
 use Honey\task\SendFaceTask;
+
+use Honey\generator\Honey;
 
 class Main extends PluginBase implements Listener{
 
@@ -117,6 +121,7 @@ class Main extends PluginBase implements Listener{
 		$this->loginTime = [];
 		$this->status = self::STATUS_WAIT; //ステータス更新
 		$this->wait_time = $this->config->getNested("Game.wait-time");
+		Generator::addGenerator(Honey::class, "honey"); //はにージェネレータを登録
 	}
 
 	public function onMain(){
