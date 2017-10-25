@@ -10,6 +10,8 @@ class Account{
 	private $xuid;
 	/** @var mixed[] */
 	private $data = [];
+	/** @var Form[] */
+	private $form_history = [];
 
 	public function __construct($xuid){
 		$this->xuid = $xuid;
@@ -63,6 +65,38 @@ class Account{
 	   */
 	public function getLastLogin(){
 		return $this->data["lastlogin"];
+	}
+
+	/**
+	   * @return Form | プレイヤーに送られたフォームオブジェクト全て(サーバー参加時から)
+	   */
+	public function getAllFormHistories(){
+		return $this->form_history;
+	}
+
+	/**
+	   * $back個前のFormオブジェクトが返り値になる
+	   * 例 : $this->form_history = [new TestForm1(), new TestForm2()];
+	   * $this->getFormHistory(0) => TestForm2
+	   * $this->getFormHistory(1) => TestForm1
+	   *
+	   * @param int $back
+	   *
+	   * @return Form|null | プレイヤーに送られたフォームオブジェクト
+	   */
+	public function getFormHistory($back = 0){
+		$history = $this->form_history;
+		if(isset($history[count($history) - ($back + 1)])){
+			return $history[count($history) - ($back + 1)];
+		}
+		return null;
+	}
+
+	/**
+	   * @param Form $form
+	   */
+	public function addFormHistory($form){
+		$this->form_history[] = $form;
 	}
 
 	/**

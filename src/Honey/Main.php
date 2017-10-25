@@ -210,6 +210,10 @@ class Main extends PluginBase implements Listener{
 			$pk->formId = FormIds::MENU_USER_SETTINGS;
 			$pk->formData = json_encode($form->getFormData());
 			$player->dataPacket($pk);
+			$account = AccountManager::getAccount($player);
+			if($account !== null){ //登録しているときのみ
+				$form->addFormHistory($account);
+			}
 		}
 		if($pk instanceof ModalFormResponsePacket){
 			$formid = $pk->formId;
@@ -230,6 +234,8 @@ class Main extends PluginBase implements Listener{
 							//正常にアカウント作成が完了
 							$player->sendMessage("§a[はにー]§bアカウントの作成が完了しました。");
 							$player->setImmobile(false); //移動できないのを解除
+							$account = AccountManager::getAccount($player);
+							$account->addFormHistory(new RegisterForm()); //RegisterFormのインスタンスがないため新たに作成
 						}else{
 							//アカウント作成時に何らかのエラーが発生した
 							$player->sendMessage("§a[はにー]§4エラーが発生しました。");

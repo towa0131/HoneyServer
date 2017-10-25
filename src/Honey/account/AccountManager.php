@@ -137,6 +137,24 @@ class AccountManager{
 	}
 
 	/**
+	   * @param Account $account
+	   * @param string $table
+	   * @param string $key
+	   * @param mixed $value
+	   *
+	   * @return bool
+	   */
+	public static function updateAccount($account, $table, $key, $value){
+		$db = DB::getDB();
+		$xuid = $account->getXuid();
+		$query = "UPDATE " . $table . " SET " . $key . " = '" . $value . "' WHERE xuid = '" . $xuid . "'";
+		 if(!$db->query($query)){
+			return false;
+		}
+		return true;
+	}
+
+	/**
 	   * @param string $name
 	   *
 	   * @return string

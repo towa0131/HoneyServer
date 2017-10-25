@@ -10,6 +10,9 @@ use Honey\customUI\elements\Toggle;
 
 class UserSettingsForm implements Form{
 
+	/**
+	   * @return CustomForm
+	   */
 	public function getFormData(){
 		$form = new CustomForm("はにー鯖");
 		$form->addIconUrl("http://108.61.182.170/apple-touch-icon.jpg");
@@ -20,5 +23,12 @@ class UserSettingsForm implements Form{
 		$mine_effects = ["なし"];
 		$form->addElement(new Dropdown("採掘時のエフェクト", $mine_effects));
 		return $form;
+	}
+
+	/**
+	   * @param Account $account
+	   */
+	public function addFormHistory($account){
+		$account->addFormHistory($this);
 	}
 }
