@@ -5,7 +5,7 @@ api:
   - 1.13.0
   - 2.0.0
   - 3.0.0
-  - 3.0.0-ALPHA5
+  - 3.0.0-ALPHA9
 load: STARTUP
 author: towa0131
 authors: [towa0131, HoneyServerDeveloperTeam]
