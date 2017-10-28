@@ -267,6 +267,7 @@ class Main extends PluginBase implements Listener{
 							$pk->formId = FormIds::FORM_REGISTER;
 							$pk->formData = json_encode($form->getFormData());
 							$player->dataPacket($pk);
+							$account->addFormHistory($form);
 						}
 					}else{ //確認用パスワードがまちがっていた場合
 						$form = new RegisterForm();
@@ -274,6 +275,7 @@ class Main extends PluginBase implements Listener{
 						$pk->formId = FormIds::FORM_REGISTER;
 						$pk->formData = json_encode($form->getFormData());
 						$player->dataPacket($pk);
+						$account->addFormHistory($form);
 					}
 					break;
 				case FormIds::FORM_ADMIN_SETTINGS:
@@ -333,7 +335,7 @@ class Main extends PluginBase implements Listener{
 	   * @param Player $player
 	   */
 	public function sendLobbyItem(Player $player){
-		//本配布
+		//本配布(鉱石についての説明とかを記載する予定)
 		$path = __DIR__ . "/images/";
 		$imgdata = file_get_contents($path . "logo.png");
 		$photo = new PhotoTransferPacket;
