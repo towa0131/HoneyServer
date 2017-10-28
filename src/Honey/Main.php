@@ -267,7 +267,6 @@ class Main extends PluginBase implements Listener{
 							$pk->formId = FormIds::FORM_REGISTER;
 							$pk->formData = json_encode($form->getFormData());
 							$player->dataPacket($pk);
-							$account->addFormHistory($form);
 						}
 					}else{ //確認用パスワードがまちがっていた場合
 						$form = new RegisterForm();
@@ -275,7 +274,6 @@ class Main extends PluginBase implements Listener{
 						$pk->formId = FormIds::FORM_REGISTER;
 						$pk->formData = json_encode($form->getFormData());
 						$player->dataPacket($pk);
-						$account->addFormHistory($form);
 					}
 					break;
 				case FormIds::FORM_ADMIN_SETTINGS:
