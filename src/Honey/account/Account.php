@@ -68,6 +68,50 @@ class Account{
 	}
 
 	/**
+	   * @return string | 使用中のマント
+	   */
+	public function getCape(){
+		return $this->data["cape"];
+	}
+
+	/**
+	   * @return int | チャンクの表示距離
+	   */
+	public function getViewDistance(){
+		return (int)$this->data["chunk"];
+	}
+
+	/**
+	   * @return bool
+	   */
+	public function isShowFloating(){
+		if($this->data["floatingtext"]){
+			return true;
+		}
+		return false;
+	}
+
+	/**
+	   * @return bool
+	   */
+	public function isShowTemperature(){
+		if($this->data["temperature"]){
+			return true;
+		}
+		return false;
+	}
+
+	/**
+	   * @return bool
+	   */
+	public function isShowCoordinate(){
+		if($this->data["coordinate"]){
+			return true;
+		}
+		return false;
+	}
+
+	/**
 	   * @return Form | プレイヤーに送られたフォームオブジェクト全て(サーバー参加時から)
 	   */
 	public function getAllFormHistories(){
@@ -138,7 +182,19 @@ class Account{
 				}
 			}
 		}
-		if(count($this->data) == 7){
+		$data = "SELECT * FROM settings";
+		if($result = $db->query($data)){
+			while($row = $result->fetch_assoc()){
+				if($this->xuid == $row["xuid"]){
+					$this->data["floatingtext"] = (bool)$row["floatingtext"]; //採掘時の浮遊文字の表示
+					$this->data["temperature"] = (bool)$row["temperature"]; //気温とか天気の表示
+					$this->data["coordinate"] = (bool)$row["coordinate"]; //座標の表示
+					$this->data["cape"] = $row["cape"]; //使用中のマント
+					$this->data["chunk"] = $row["chunk"]; //チャンク表示距離
+				}
+			}
+		}
+		if(count($this->data) == 12){
 			return true;
 		}
 		return false;

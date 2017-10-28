@@ -133,6 +133,10 @@ class AccountManager{
 		 if(!$db->query($query)){
 			return false;
 		}
+		$query = "INSERT INTO settings(xuid) VALUES ('" . $xuid . "')"; //DB側であれこれするのでXUIDしか必要ない
+		 if(!$db->query($query)){
+			return false;
+		}
 		return true;
 	}
 
@@ -151,6 +155,8 @@ class AccountManager{
 		 if(!$db->query($query)){
 			return false;
 		}
+		$account = new Account($xuid);
+		self::$accounts[$xuid] = $account; //アカウントの更新を反映
 		return true;
 	}
 

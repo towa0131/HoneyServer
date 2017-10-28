@@ -10,18 +10,29 @@ use Honey\customUI\elements\Toggle;
 
 class UserSettingsForm implements Form{
 
+	/** @var Account */
+	public $account;
+
+	/**
+	   * @param Account $account
+	   */
+	public function __construct($account){
+		$this->account = $account;
+	}
+
 	/**
 	   * @return CustomForm
 	   */
 	public function getFormData(){
+		$account = $this->account;
 		$form = new CustomForm("はにー鯖");
 		$form->addIconUrl("http://108.61.182.170/apple-touch-icon.jpg");
 		$form->addElement(new Label("§e※現在この機能は開発中です。(設定は反映されません)"));
-		$form->addElement(new Toggle("採掘時の浮遊文字の表示", true));
-		$form->addElement(new Toggle("自分の座標の表示", true));
-		$form->addElement(new Toggle("気温/天気の表示", true));
-		$mine_effects = ["なし"];
-		$form->addElement(new Dropdown("採掘時のエフェクト", $mine_effects));
+		$form->addElement(new Toggle("採掘時の浮遊文字の表示", $account->isShowFloating()));
+		$form->addElement(new Toggle("座標の表示", $account->isShowCoordinate()));
+		$form->addElement(new Toggle("気温/天気の表示", $account->isShowTemperature()));
+		/*$mine_effects = ["なし"];
+		$form->addElement(new Dropdown("採掘時のエフェクト", $mine_effects));*/
 		return $form;
 	}
 

@@ -205,6 +205,7 @@ class Honey extends Generator{
 
 				$biome = $this->pickBiome($chunkX * 16 + $x, $chunkZ * 16 + $z);
 				$chunk->setBiomeId($x, $z, $biome->getId());
+				$color = [0, 0, 0];
 
 				for($sx = -self::$SMOOTH_SIZE; $sx <= self::$SMOOTH_SIZE; ++$sx){
 					for($sz = -self::$SMOOTH_SIZE; $sz <= self::$SMOOTH_SIZE; ++$sz){
@@ -254,6 +255,7 @@ class Honey extends Generator{
 			$populator->populate($this->level, $chunkX, $chunkZ, $this->random);
 		}
 	}
+
 
 	public function populateChunk(int $chunkX, int $chunkZ){
 		$this->random->setSeed(0xdeadbeef ^ ($chunkX << 8) ^ $chunkZ ^ $this->level->getSeed());

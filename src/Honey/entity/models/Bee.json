@@ -1,0 +1,98 @@
+{
+  "geometry.bee": {
+    "bones": [
+      {
+        "name": "head",
+        "pivot": [ 0.0, 24.0, 0.0 ],
+        "cubes": [
+          {
+            "origin": [ -4.0, 20.0, -4.0 ],
+            "size": [ 8, 8, 8 ],
+            "uv": [ 0, 0 ]
+          }
+        ],
+        "material": "alpha"
+      },
+      {
+        "name": "rightEar",
+        "pivot": [ 0.0, 24.0, 0.0 ],
+        "cubes": [
+          {
+            "origin": [ -3.0, 27.0, -5.0 ],
+            "size": [ 1, 4, 1 ],
+            "uv": [ 24, 0 ]
+          }
+        ],
+        "parent": "head",
+        "material": "alpha"
+      },
+      {
+        "name": "leftEar",
+        "mirror": true,
+        "pivot": [ 0.0, 24.0, 0.0 ],
+        "cubes": [
+          {
+            "origin": [ 2.0, 27.0, -5.0 ],
+            "size": [ 1, 4, 1 ],
+            "uv": [ 24, 0 ]
+          }
+        ],
+        "parent": "head",
+        "material": "alpha"
+      },
+      {
+        "name": "body",
+        "pivot": [ 0.0, 24.0, 0.0 ],
+        "cubes": [
+          {
+            "origin": [ -3.0, 13.0, -3.0 ],
+            "size": [ 6, 6, 6 ],
+            "uv": [ 0, 16 ]
+          },
+          {
+           "origin": [ -4.0, 5.0, -4.0 ],
+            "size": [ 8, 8, 8 ],
+            "uv": [ 0, 16 ]
+          },
+          {
+            "origin": [ -1.0, -3.0, 0.0 ],
+            "size": [ 2, 8, 1 ],
+            "uv": [ 0, 34 ]
+          }
+        ],
+        "material": "alpha"
+      },
+      {
+        "name": "rightWing",
+        "pivot": [ 0.0, 24.0, 0.0 ],
+        "cubes": [
+          {
+            "origin": [ -12.0, 7.0, 1.5 ],
+            "size": [ 10, 16, 1 ],
+            "uv": [ 42, 0 ]
+          }
+        ],
+        "parent": "body",
+        "material": "alpha"
+      },
+      {
+        "name": "leftWing",
+        "mirror": true,
+        "pivot": [ 0.0, 24.0, 0.0 ],
+        "cubes": [
+          {
+            "origin": [ 2.0, 7.0, 1.5 ],
+            "size": [ 10, 16, 1 ],
+            "uv": [ 42, 0 ]
+          }
+        ],
+        "parent": "body",
+        "material": "alpha"
+      }
+    ],
+    "texturewidth": 64,
+    "textureheight": 64,
+    "META_ModelVersion": "1.0.6",
+    "rigtype": "slim"
+  }
+}

@@ -25,6 +25,7 @@ use pocketmine\event\player\PlayerDeathEvent;
 use pocketmine\event\player\PlayerChatEvent;
 use pocketmine\event\player\PlayerPreLoginEvent;
 use pocketmine\event\player\PlayerInteractEvent;
+use pocketmine\event\player\PlayerMoveEvent;
 
 use pocketmine\event\block\BlockBreakEvent;
 
@@ -84,6 +85,7 @@ use Honey\customUI\elements\Toggle;
 
 use Honey\form\RegisterForm;
 use Honey\form\UserSettingsForm;
+use Honey\form\AdminSettingsForm;
 
 use Honey\task\RegisterFormTask;
 use Honey\task\SendFaceTask;
@@ -120,7 +122,7 @@ class Main extends PluginBase implements Listener{
 		$this->time = 0;
 		$this->loginTime = [];
 		$this->status = self::STATUS_WAIT; //ステータス更新
-		$this->wait_time = $this->config->getNested("Game.wait-time");
+		$this->waitTime = $this->config->getNested("Game.wait-time");
 		Generator::addGenerator(Honey::class, "honey"); //はにージェネレータを登録
 	}
 
@@ -133,8 +135,8 @@ class Main extends PluginBase implements Listener{
 				}
 				break;
 			case self::STATUS_LOAD:
-				$this->wait_time--;
-				switch($this->wait_time){ //ゲームロード時間が特定の時間になったときの処理
+				$this->waitTime--;
+				switch($this->waitTime){ //ゲームロード時間が特定の時間になったときの処理
 					case $this->config->getNested("Game.wait-time"):
 						//人数が揃ったことをプレイヤーに通知
 						foreach($this->getServer()->getOnlinePlayers() as $p){
@@ -196,6 +198,13 @@ class Main extends PluginBase implements Listener{
 			$tile->addPattern("moj", 1);
 		}
 		*/
+		$form = new AdminSettingsForm();
+		$pk = new ModalFormRequestPacket();
+		$pk->formId = FormIds::FORM_ADMIN_SETTINGS;
+		$pk->formData = json_encode($form->getFormData());
+		$player->dataPacket($pk);
+		$account = AccountManager::getAccount($player);
+		$account->addFormHistory($form);
 	}
 
 	public function onReceive(DataPacketReceiveEvent $event){
@@ -205,19 +214,20 @@ class Main extends PluginBase implements Listener{
 		$xuid = $player->getXUID();
 		$ip = $player->getAddress();
 		if($pk instanceof ServerSettingsRequestPacket){
-			$form = new UserSettingsForm();
-			$pk = new ServerSettingsResponsePacket();
-			$pk->formId = FormIds::MENU_USER_SETTINGS;
-			$pk->formData = json_encode($form->getFormData());
-			$player->dataPacket($pk);
 			$account = AccountManager::getAccount($player);
 			if($account !== null){ //登録しているときのみ
+				$form = new UserSettingsForm($account);
+				$pk = new ServerSettingsResponsePacket();
+				$pk->formId = FormIds::MENU_USER_SETTINGS;
+				$pk->formData = json_encode($form->getFormData());
+				$player->dataPacket($pk);
 				$form->addFormHistory($account);
 			}
 		}
 		if($pk instanceof ModalFormResponsePacket){
 			$formid = $pk->formId;
-			$formdata = json_decode($pk->formData, true);
+			$rawdata = trim($pk->formData);
+			$formdata = json_decode($rawdata, true);
 			switch($formid){
 				case FormIds::FORM_REGISTER:
 					if($formdata[1] == $formdata[2]){
@@ -251,6 +261,48 @@ class Main extends PluginBase implements Listener{
 						$pk->formId = FormIds::FORM_REGISTER;
 						$pk->formData = json_encode($form->getFormData());
 						$player->dataPacket($pk);
+					}
+					break;
+				case FormIds::FORM_ADMIN_SETTINGS:
+					$account = AccountManager::getAccount($player);
+					$history = $account->getFormHistory(0);
+					switch($history->case){
+						case 0:
+							if(is_numeric($rawdata)){
+								$form = new AdminSettingsForm(0, null, $rawdata);
+								$pk = new ModalFormRequestPacket();
+								$pk->formId = FormIds::FORM_ADMIN_SETTINGS;
+								$pk->formData = json_encode($form->getFormData());
+								$player->dataPacket($pk);
+								$account = AccountManager::getAccount($player);
+								$account->addFormHistory($form);
+							}
+							break;
+						case 1:
+							if(is_numeric($rawdata)){
+								$target = $history->playernames[(int)$rawdata];
+								$form = new AdminSettingsForm(2, AccountManager::getAccountByName($target));
+								$pk = new ModalFormRequestPacket();
+								$pk->formId = FormIds::FORM_ADMIN_SETTINGS;
+								$pk->formData = json_encode($form->getFormData());
+								$player->dataPacket($pk);
+								$account = AccountManager::getAccount($player);
+								$account->addFormHistory($form);
+							}
+							break;
+						case 2:
+							$langList = ["jpn","eng"];
+							$viewDistance = ["3", "6", "9", "12", "15", "18"];
+							$ownerAccount = AccountManager::getAccount($player);
+							$history = $ownerAccount->getFormHistory(0);
+							$account = $history->account;
+							AccountManager::updateAccount($account, "playerdata", "honey", $formdata[1]);
+							AccountManager::updateAccount($account, "playerdata", "language", (string)$langList[$formdata[2]]);
+							AccountManager::updateAccount($account, "settings", "chunk", $viewDistance[$formdata[3]]);
+							AccountManager::updateAccount($account, "settings", "floatingtext", (int)$formdata[4]);
+							AccountManager::updateAccount($account, "settings", "coordinate", (int)$formdata[5]);
+							AccountManager::updateAccount($account, "settings", "temperature", (int)$formdata[6]);
+							break;
 					}
 					break;
 			}
