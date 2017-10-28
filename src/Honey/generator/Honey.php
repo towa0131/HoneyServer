@@ -172,18 +172,21 @@ class Honey extends Generator{
 
 		$ores = new Ore();
 		$ores->setOreTypes([
-			new OreType(BlockFactory::get(Block::COAL_ORE), 20, 16, 0, 128),
-			new OreType(BlockFactory::get(Block::IRON_ORE), 20, 8, 0, 64),
-			new OreType(BlockFactory::get(Block::REDSTONE_ORE), 8, 7, 0, 16),
+			new OreType(BlockFactory::get(Block::COAL_ORE), 15, 16, 0, 128),
+			new OreType(BlockFactory::get(Block::IRON_ORE), 10, 6, 0, 64),
+			new OreType(BlockFactory::get(Block::REDSTONE_ORE), 5, 7, 0, 16),
 			new OreType(BlockFactory::get(Block::LAPIS_ORE), 1, 6, 0, 32),
-			new OreType(BlockFactory::get(Block::GOLD_ORE), 2, 8, 0, 32),
-			new OreType(BlockFactory::get(Block::DIAMOND_ORE), 1, 7, 0, 16),
+			new OreType(BlockFactory::get(Block::GOLD_ORE), 2, 7, 0, 32),
+			new OreType(BlockFactory::get(Block::DIAMOND_ORE), 1, 4, 0, 16),
 			new OreType(BlockFactory::get(Block::DIRT), 20, 32, 0, 128),
 			new OreType(BlockFactory::get(Block::GRAVEL), 10, 16, 0, 128),
 			new OreType(BlockFactory::get(Block::END_STONE, 10), 10, 7, 0, 50), //銅鉱石
-			new OreType(BlockFactory::get(Block::END_STONE, 11), 2, 8, 0, 20), //銀鉱石
-			new OreType(BlockFactory::get(Block::END_STONE, 12), 1, 7, 0, 10), //ルビー鉱石
-			new OreType(BlockFactory::get(Block::END_STONE, 13), 2, 5, 0, 15), //サファイア鉱石
+			new OreType(BlockFactory::get(Block::END_STONE, 11), 2, 7, 0, 20), //銀鉱石
+			new OreType(BlockFactory::get(Block::END_STONE, 12), 1, 3, 0, 10), //ルビー鉱石
+			new OreType(BlockFactory::get(Block::END_STONE, 13), 2, 3, 0, 10), //サファイア鉱石
+			new OreType(BlockFactory::get(Block::END_STONE, 14), 2, 3, 0, 10), //ルビー鉱石
+			new OreType(BlockFactory::get(Block::END_STONE, 15), 1, 3, 0, 10), //アメジスト鉱石
+			new OreType(BlockFactory::get(Block::END_STONE, 16), 1, 3, 0, 15), //琥珀鉱石
 		]);
 		$this->populators[] = $ores;
 	}
