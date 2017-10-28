@@ -92,6 +92,8 @@ use Honey\task\SendFaceTask;
 
 use Honey\generator\Honey;
 
+use Honey\item\MagicDiamond;
+
 class Main extends PluginBase implements Listener{
 
 	const STATUS_WAIT = 0; //待機時間(ゲーム人数が揃っていない状態)
@@ -174,6 +176,17 @@ class Main extends PluginBase implements Listener{
 		}
 		$this->getServer()->getScheduler()->scheduleAsyncTask(new SendFaceTask($name, $player->getSkin()->getSkinData()));
 		$this->sendLobbyItem($player);
+		$items = [
+			"\Honey\item\MagicDiamond" => 264
+		];
+		foreach($player->getInventory()->getContents() as $slot => $item){
+			$result = array_search($item->getId(), $items);
+			if($result !== false){
+				$magicitem = new $result(0, $item->getNamedTag());
+				$magicitem->setCount($item->getCount());
+				$player->getInventory()->setItem($slot, $magicitem);
+			}
+		}
 	}
 
 	public function onBreak(BlockBreakEvent $event){
@@ -198,13 +211,13 @@ class Main extends PluginBase implements Listener{
 			$tile->addPattern("moj", 1);
 		}
 		*/
-		$form = new AdminSettingsForm();
+		/*$form = new AdminSettingsForm();
 		$pk = new ModalFormRequestPacket();
 		$pk->formId = FormIds::FORM_ADMIN_SETTINGS;
 		$pk->formData = json_encode($form->getFormData());
 		$player->dataPacket($pk);
 		$account = AccountManager::getAccount($player);
-		$account->addFormHistory($form);
+		$account->addFormHistory($form);*/
 	}
 
 	public function onReceive(DataPacketReceiveEvent $event){
