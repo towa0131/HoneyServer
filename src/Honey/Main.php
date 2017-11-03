@@ -297,12 +297,14 @@ class Main extends PluginBase implements Listener{
 							$ownerAccount = AccountManager::getAccount($player);
 							$history = $ownerAccount->getFormHistory(0);
 							$account = $history->account;
-							AccountManager::updateAccount($account, "playerdata", "honey", $formdata[1]);
-							AccountManager::updateAccount($account, "playerdata", "language", $langList[(int)$formdata[2]]);
-							AccountManager::updateAccount($account, "settings", "chunk", $viewDistance[$formdata[3]]);
-							AccountManager::updateAccount($account, "settings", "floatingtext", (int)$formdata[4]);
-							AccountManager::updateAccount($account, "settings", "coordinate", (int)$formdata[5]);
-							AccountManager::updateAccount($account, "settings", "temperature", (int)$formdata[6]);
+							if(is_numeric($formdata[3])){ //×が押されなかったら
+								AccountManager::updateAccount($account, "playerdata", "honey", $formdata[1]);
+								AccountManager::updateAccount($account, "playerdata", "language", $langList[(int)$formdata[2]]);
+								AccountManager::updateAccount($account, "settings", "chunk", $viewDistance[(int)$formdata[3]]);
+								AccountManager::updateAccount($account, "settings", "floatingtext", (int)$formdata[4]);
+								AccountManager::updateAccount($account, "settings", "coordinate", (int)$formdata[5]);
+								AccountManager::updateAccount($account, "settings", "temperature", (int)$formdata[6]);
+							}
 							break;
 					}
 					break;
