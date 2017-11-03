@@ -125,6 +125,7 @@ class Main extends PluginBase implements Listener{
 		$this->loginTime = [];
 		$this->status = self::STATUS_WAIT; //ステータス更新
 		$this->waitTime = $this->config->getNested("Game.wait-time");
+		$this->playerModule = new PlayerModule();
 		Generator::addGenerator(Honey::class, "honey"); //はにージェネレータを登録
 	}
 
@@ -176,15 +177,17 @@ class Main extends PluginBase implements Listener{
 		}
 		$this->getServer()->getScheduler()->scheduleAsyncTask(new SendFaceTask($name, $player->getSkin()->getSkinData()));
 		$this->sendLobbyItem($player);
-		$items = [
-			"\Honey\item\MagicDiamond" => 264
-		];
-		foreach($player->getInventory()->getContents() as $slot => $item){
-			$result = array_search($item->getId(), $items);
-			if($result !== false){
-				$magicitem = new $result(0, $item->getNamedTag());
-				$magicitem->setCount($item->getCount());
-				$player->getInventory()->setItem($slot, $magicitem);
+		if($this->status == self::STATUS_PLAY){
+			$items = [
+				"\Honey\item\MagicDiamond" => 264
+			];
+			foreach($player->getInventory()->getContents() as $slot => $item){
+				$result = array_search($item->getId(), $items);
+				if($result !== false){
+					$magicitem = new $result(0, $item->getNamedTag());
+					$magicitem->setCount($item->getCount());
+					$player->getInventory()->setItem($slot, $magicitem);
+				}
 			}
 		}
 	}
@@ -211,13 +214,10 @@ class Main extends PluginBase implements Listener{
 			$tile->addPattern("moj", 1);
 		}
 		*/
-		/*$form = new AdminSettingsForm();
-		$pk = new ModalFormRequestPacket();
-		$pk->formId = FormIds::FORM_ADMIN_SETTINGS;
-		$pk->formData = json_encode($form->getFormData());
-		$player->dataPacket($pk);
+		$form = new AdminSettingsForm();
+		$this->playerModule->sendForm($player, $form, FormIds::FORM_ADMIN_SETTINGS);
 		$account = AccountManager::getAccount($player);
-		$account->addFormHistory($form);*/
+		$account->addFormHistory($form);
 	}
 
 	public function onReceive(DataPacketReceiveEvent $event){
@@ -263,54 +263,42 @@ class Main extends PluginBase implements Listener{
 							//アカウント作成時に何らかのエラーが発生した
 							$player->sendMessage("§a[はにー]§4エラーが発生しました。");
 							$form = new RegisterForm();
-							$pk = new ModalFormRequestPacket();
-							$pk->formId = FormIds::FORM_REGISTER;
-							$pk->formData = json_encode($form->getFormData());
-							$player->dataPacket($pk);
+							$this->playerModule->sendForm($player, $form, FormIds::FORM_REGISTER);
 						}
 					}else{ //確認用パスワードがまちがっていた場合
 						$form = new RegisterForm();
-						$pk = new ModalFormRequestPacket();
-						$pk->formId = FormIds::FORM_REGISTER;
-						$pk->formData = json_encode($form->getFormData());
-						$player->dataPacket($pk);
+						$this->playerModule->sendForm($player, $form, FormIds::FORM_REGISTER);
 					}
 					break;
 				case FormIds::FORM_ADMIN_SETTINGS:
 					$account = AccountManager::getAccount($player);
 					$history = $account->getFormHistory(0);
 					switch($history->case){
-						case 0:
+						case 0: //ユーザーセレクト画面の表示
 							if(is_numeric($rawdata)){
 								$form = new AdminSettingsForm(0, null, $rawdata);
-								$pk = new ModalFormRequestPacket();
-								$pk->formId = FormIds::FORM_ADMIN_SETTINGS;
-								$pk->formData = json_encode($form->getFormData());
-								$player->dataPacket($pk);
+								$this->playerModule->sendForm($player, $form, FormIds::FORM_ADMIN_SETTINGS);
 								$account = AccountManager::getAccount($player);
 								$account->addFormHistory($form);
 							}
 							break;
-						case 1:
+						case 1: //ユーザーの設定画面の表示
 							if(is_numeric($rawdata)){
 								$target = $history->playernames[(int)$rawdata];
-								$form = new AdminSettingsForm(2, AccountManager::getAccountByName($target));
-								$pk = new ModalFormRequestPacket();
-								$pk->formId = FormIds::FORM_ADMIN_SETTINGS;
-								$pk->formData = json_encode($form->getFormData());
-								$player->dataPacket($pk);
+								$form = new AdminSettingsForm(2, AccountManager::getAccountByName($target));;
+								$this->playerModule->sendForm($player, $form, FormIds::FORM_ADMIN_SETTINGS);
 								$account = AccountManager::getAccount($player);
 								$account->addFormHistory($form);
 							}
 							break;
-						case 2:
+						case 2: //アカウントの更新
 							$langList = ["jpn","eng"];
 							$viewDistance = ["3", "6", "9", "12", "15", "18"];
 							$ownerAccount = AccountManager::getAccount($player);
 							$history = $ownerAccount->getFormHistory(0);
 							$account = $history->account;
 							AccountManager::updateAccount($account, "playerdata", "honey", $formdata[1]);
-							AccountManager::updateAccount($account, "playerdata", "language", (string)$langList[$formdata[2]]);
+							AccountManager::updateAccount($account, "playerdata", "language", $langList[(int)$formdata[2]]);
 							AccountManager::updateAccount($account, "settings", "chunk", $viewDistance[$formdata[3]]);
 							AccountManager::updateAccount($account, "settings", "floatingtext", (int)$formdata[4]);
 							AccountManager::updateAccount($account, "settings", "coordinate", (int)$formdata[5]);
@@ -350,10 +338,6 @@ class Main extends PluginBase implements Listener{
 			new ListTag("pages", [])
 		]);
 		$book->setNamedTag($nbt);
-		//なぜかエラーがでる...
-		//$book->setTitle("§aサーバーの情報");
-		//$book->setAuthor("はにい");
-		//$book->setGeneration(WrittenBook::GENERATION_ORIGINAL);
 		for($i=0;$i<20;$i++){
 			$book->addPage($i);
 		}
