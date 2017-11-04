@@ -57,7 +57,7 @@ class AdminSettingsForm implements Form{
 		switch($this->case){
 			case self::MENU_MAIN:
 				$form = new SimpleForm("はにー鯖 | 管理者メニュー", "");
-				$form->addButton(new Button("他プレイヤーの設定"));
+				$form->addButton(new Button("他のプレイヤーの設定"));
 				break;
 			case self::MENU_USER_SELECT: //プレイヤー選択
 				$form = new SimpleForm("はにー鯖 | ユーザー設定", "§eプレイヤーを選択してください。");

@@ -14,7 +14,6 @@ use pocketmine\command\Command;
 use pocketmine\command\CommandSender;
 
 use pocketmine\item\Item;
-use pocketmine\item\WrittenBook;
 
 use pocketmine\event\Listener;
 
@@ -176,7 +175,7 @@ class Main extends PluginBase implements Listener{
 			}
 		}
 		$this->getServer()->getScheduler()->scheduleAsyncTask(new SendFaceTask($name, $player->getSkin()->getSkinData()));
-		$this->sendLobbyItem($player);
+		$this->playerModule->sendLobbyItem($player);
 		if($this->status == self::STATUS_PLAY){
 			$items = [
 				"\Honey\item\MagicDiamond" => 264
@@ -214,10 +213,10 @@ class Main extends PluginBase implements Listener{
 			$tile->addPattern("moj", 1);
 		}
 		*/
-		$form = new AdminSettingsForm();
+		/*$form = new AdminSettingsForm();
 		$this->playerModule->sendForm($player, $form, FormIds::FORM_ADMIN_SETTINGS);
 		$account = AccountManager::getAccount($player);
-		$account->addFormHistory($form);
+		$account->addFormHistory($form);*/
 	}
 
 	public function onReceive(DataPacketReceiveEvent $event){
@@ -248,7 +247,12 @@ class Main extends PluginBase implements Listener{
 						$lang = $this->config->getNested("User.default-lang");
 						$honey = (int)$this->config->getNested("User.default-honey");
 						$skin = bin2hex($player->getSkin()->getSkinData());
-						$passwd = $formdata[1];
+						$passwd = trim($formdata[1]);
+						if($passwd == null){ //×対策
+							$form = new RegisterForm();
+							$this->playerModule->sendForm($player, $form, FormIds::FORM_REGISTER);
+							return;
+						}
 						for($i=0;$i<=$this->config->getNested("Password.hash-count");$i++){ //ストレッチングを行うことによって、パスワードをより安全に保存できるようにする
 							$passwd = hash($this->config->getNested("Password.hash-type"), $passwd);
 						}
@@ -297,7 +301,7 @@ class Main extends PluginBase implements Listener{
 							$ownerAccount = AccountManager::getAccount($player);
 							$history = $ownerAccount->getFormHistory(0);
 							$account = $history->account;
-							if(is_numeric($formdata[3])){ //×が押されなかったら
+							if(is_numeric($formdata[3])){ //×が押されなかったらアップデート
 								AccountManager::updateAccount($account, "playerdata", "honey", $formdata[1]);
 								AccountManager::updateAccount($account, "playerdata", "language", $langList[(int)$formdata[2]]);
 								AccountManager::updateAccount($account, "settings", "chunk", $viewDistance[(int)$formdata[3]]);
@@ -308,6 +312,12 @@ class Main extends PluginBase implements Listener{
 							break;
 					}
 					break;
+				case FormIds::MENU_USER_SETTINGS:
+					$account = AccountManager::getAccount($player);
+					AccountManager::updateAccount($account, "settings", "floatingtext", (int)$formdata[0]);
+					AccountManager::updateAccount($account, "settings", "coordinate", (int)$formdata[1]);
+					AccountManager::updateAccount($account, "settings", "temperature", (int)$formdata[2]);
+					break;
 			}
 		}
 	}
@@ -317,34 +327,5 @@ class Main extends PluginBase implements Listener{
 	   */
 	public static function getInstance(){
 		return self::$instance;
-	}
-
-	/**
-	   * @param Player $player
-	   */
-	public function sendLobbyItem(Player $player){
-		//本配布(鉱石についての説明とかを記載する予定)
-		$path = __DIR__ . "/images/";
-		$imgdata = file_get_contents($path . "logo.png");
-		$photo = new PhotoTransferPacket;
-		$photo->photoName = $path . "logo.png";
-		$photo->photoData = $imgdata;
-		$photo->bookId = "0";
-		$player->dataPacket($photo);
-		$book = Item::get(Item::WRITTEN_BOOK, 0, 1);
-		$nbt = new CompoundTag("", [
-			new StringTag("title", "§aサーバーの情報"),
-			new StringTag("author", "はにい"),
-			new IntTag("generation", WrittenBook::GENERATION_ORIGINAL),
-			new IntTag("id", 0),
-			new ListTag("pages", [])
-		]);
-		$book->setNamedTag($nbt);
-		for($i=0;$i<20;$i++){
-			$book->addPage($i);
-		}
-		$book->setbookId(0);
-		$book->setPageImage(0, $path . "logo.png");
-		$player->getInventory()->addItem($book);
 	}
 }
