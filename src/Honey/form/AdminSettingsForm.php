@@ -72,13 +72,13 @@ class AdminSettingsForm implements Form{
 				break;
 			case self::MENU_USER_SETTINGS_SELECT:
 				$account = $this->account;
-				$form = new SimpleForm("はにー鯖 | ユーザー設定", "");
+				$form = new SimpleForm("はにー鯖 | ユーザー設定 > " . $account->getName(), "");
 				$form->addButton(new Button("ユーザー設定"));
 				$form->addButton(new Button("XBoxアカウントの表示"));
 				break;
 			case self::MENU_USER_SETTINGS: //ユーザーの設定
 				$account = $this->account;
-				$form = new CustomForm("はにー鯖 | ユーザー設定");
+				$form = new CustomForm("はにー鯖 | ユーザー設定 > " . $account->getName());
 				$form->addElement(new Label($account->getName() . "のユーザー設定"));
 				$form->addElement(new Input("所持はにい: ",$account->getHoney(), $account->getHoney()));
 				$drop = new Dropdown("言語設定: ", ["日本語", "English(US)"]);
