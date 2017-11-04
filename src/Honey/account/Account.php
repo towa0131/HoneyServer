@@ -2,6 +2,8 @@
 
 namespace Honey\account;
 
+use pocketmine\Server;
+
 use Honey\utils\DB;
 
 class Account{
@@ -106,6 +108,17 @@ class Account{
 	   */
 	public function isShowCoordinate(){
 		if($this->data["coordinate"]){
+			return true;
+		}
+		return false;
+	}
+
+	/**
+	   * @return bool
+	   */
+	public function isOnline(){
+		$name = $this->data["name"];
+		if(Server::getInstance()->getPlayerExact($name) !== null){
 			return true;
 		}
 		return false;

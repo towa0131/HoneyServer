@@ -204,16 +204,6 @@ class Main extends PluginBase implements Listener{
 		$x = $block->getX();
 		$y = $block->getY();
 		$z = $block->getZ();
-		/* のちのち何かに使うかも程度
-		if($block->getID() == 176 || $block->getID() == 177){
-			$vec = new Vector3($x, $y, $z);
-			$tile = $player->getLevel()->getTile($vec);
-			$tile->setBaseColor(11);
-			$tile->addPattern("ts", 14);
-			$tile->addPattern("bs", 14);
-			$tile->addPattern("moj", 1);
-		}
-		*/
 		$form = new AdminSettingsForm();
 		$this->playerModule->sendForm($player, $form, FormIds::FORM_ADMIN_SETTINGS);
 		$account = AccountManager::getAccount($player);
@@ -239,7 +229,7 @@ class Main extends PluginBase implements Listener{
 		}
 		if($pk instanceof ModalFormResponsePacket){
 			$formid = $pk->formId;
-			$rawdata = trim($pk->formData);
+			$rawdata = trim($pk->formData); //trimする理由はnullが送られてきたときにnull検知に引っ掛からないため(多分"NULL "になってる)
 			$formdata = json_decode($rawdata, true);
 			switch($formid){
 				case FormIds::FORM_REGISTER:
@@ -290,10 +280,15 @@ class Main extends PluginBase implements Listener{
 						case AdminSettingsForm::MENU_USER_SELECT: //ユーザーの設定セレクト画面の表示
 							if(is_numeric($rawdata)){
 								$target = $history->buttons[(int)$rawdata];
-								$form = new AdminSettingsForm(2, AccountManager::getAccountByName($target));
-								$this->playerModule->sendForm($player, $form, FormIds::FORM_ADMIN_SETTINGS);
-								$account = AccountManager::getAccount($player);
-								$account->addFormHistory($form);
+								$account = AccountManager::getAccountByName($target);
+								if($account->isOnline()){
+									$form = new AdminSettingsForm(2, $account);
+									$this->playerModule->sendForm($player, $form, FormIds::FORM_ADMIN_SETTINGS);
+									$account = AccountManager::getAccount($player);
+									$account->addFormHistory($form);
+								}else{
+									$player->sendMessage("§a[はにー]§4エラー : プレイヤーが見つかりません。");
+								}
 							}
 							break;
 						case AdminSettingsForm::MENU_USER_SETTINGS_SELECT: //ユーザー選択画面の表示
