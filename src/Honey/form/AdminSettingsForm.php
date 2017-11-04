@@ -21,14 +21,15 @@ class AdminSettingsForm implements Form{
 
 	const MENU_MAIN = 0;
 	const MENU_USER_SELECT = 1;
-	const MENU_USER_SETTINGS = 2;
+	const MENU_USER_SETTINGS_SELECT = 2;
+	const MENU_USER_SETTINGS = 3;
 
 	/** @var int */
 	public $case;
 	/** @var Account */
 	public $account;
 	/** @var string[] */
-	public $playernames = [];
+	public $buttons = [];
 
 	/**
 	   * @param int $case
@@ -65,9 +66,15 @@ class AdminSettingsForm implements Form{
 					if(AccountManager::hasAccount($p->getXUID())){
 						$name = $p->getName();
 						$form->addButton(new Button($name));
-						$this->playernames[] = $name;
+						$this->buttons[] = $name;
 					}
 				}
+				break;
+			case self::MENU_USER_SETTINGS_SELECT:
+				$account = $this->account;
+				$form = new SimpleForm("はにー鯖 | ユーザー設定", "");
+				$form->addButton(new Button("ユーザー設定"));
+				$form->addButton(new Button("XBoxアカウントの表示"));
 				break;
 			case self::MENU_USER_SETTINGS: //ユーザーの設定
 				$account = $this->account;

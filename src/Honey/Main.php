@@ -42,6 +42,7 @@ use pocketmine\network\mcpe\protocol\PlayerActionPacket;
 use pocketmine\network\mcpe\protocol\RemoveEntityPacket;
 use pocketmine\network\mcpe\protocol\ServerSettingsRequestPacket;
 use pocketmine\network\mcpe\protocol\ServerSettingsResponsePacket;
+use pocketmine\network\mcpe\protocol\ShowProfilePacket;
 use pocketmine\network\mcpe\protocol\ShowStoreOfferPacket;
 use pocketmine\network\mcpe\protocol\InventoryTransactionPacket;
 use pocketmine\network\mcpe\protocol\TransferPacket;
@@ -213,10 +214,10 @@ class Main extends PluginBase implements Listener{
 			$tile->addPattern("moj", 1);
 		}
 		*/
-		/*$form = new AdminSettingsForm();
+		$form = new AdminSettingsForm();
 		$this->playerModule->sendForm($player, $form, FormIds::FORM_ADMIN_SETTINGS);
 		$account = AccountManager::getAccount($player);
-		$account->addFormHistory($form);*/
+		$account->addFormHistory($form);
 	}
 
 	public function onReceive(DataPacketReceiveEvent $event){
@@ -278,7 +279,7 @@ class Main extends PluginBase implements Listener{
 					$account = AccountManager::getAccount($player);
 					$history = $account->getFormHistory(0);
 					switch($history->case){
-						case 0: //ユーザーセレクト画面の表示
+						case AdminSettingsForm::MENU_MAIN: //ユーザーセレクト画面の表示
 							if(is_numeric($rawdata)){
 								$form = new AdminSettingsForm(0, null, $rawdata);
 								$this->playerModule->sendForm($player, $form, FormIds::FORM_ADMIN_SETTINGS);
@@ -286,16 +287,37 @@ class Main extends PluginBase implements Listener{
 								$account->addFormHistory($form);
 							}
 							break;
-						case 1: //ユーザーの設定画面の表示
+						case AdminSettingsForm::MENU_USER_SELECT: //ユーザーの設定セレクト画面の表示
 							if(is_numeric($rawdata)){
-								$target = $history->playernames[(int)$rawdata];
-								$form = new AdminSettingsForm(2, AccountManager::getAccountByName($target));;
+								$target = $history->buttons[(int)$rawdata];
+								$form = new AdminSettingsForm(2, AccountManager::getAccountByName($target));
 								$this->playerModule->sendForm($player, $form, FormIds::FORM_ADMIN_SETTINGS);
 								$account = AccountManager::getAccount($player);
 								$account->addFormHistory($form);
 							}
 							break;
-						case 2: //アカウントの更新
+						case AdminSettingsForm::MENU_USER_SETTINGS_SELECT: //ユーザー選択画面の表示
+							if(is_numeric($rawdata)){
+								$ownerAccount = AccountManager::getAccount($player);
+								$history = $ownerAccount->getFormHistory(0);
+								$account = $history->account;
+								switch($rawdata){
+									case 0: //アカウント操作画面
+										$form = new AdminSettingsForm(AdminSettingsForm::MENU_USER_SETTINGS, $account);
+										$this->playerModule->sendForm($player, $form, FormIds::FORM_ADMIN_SETTINGS);
+										$account = AccountManager::getAccount($player);
+										$account->addFormHistory($form);
+										break;
+									case 1: //XBox垢表示
+										$name = $account->getName();
+										$pk = new ShowProfilePacket();
+										$pk->username = $name;
+										$player->dataPacket($pk);
+										break;
+								}
+							}
+							break;
+						case AdminSettingsForm::MENU_USER_SETTINGS: //アカウント操作の更新
 							$langList = ["jpn","eng"];
 							$viewDistance = ["3", "6", "9", "12", "15", "18"];
 							$ownerAccount = AccountManager::getAccount($player);
