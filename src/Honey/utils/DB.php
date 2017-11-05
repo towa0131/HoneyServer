@@ -51,7 +51,9 @@ class DB{
 	}
 
 	public static function resetConnect(){
-		self::$cache[0] = null; //$cacheに格納されているmysqliインスタンスを初期化
+		$mysqli = &self::$cache[0];
+		$mysqli->close(); //closeしてメモリを開放
+		$mysqli = null; //$cacheに格納されているmysqliインスタンスを初期化
 	}
 
 	public static function setConfig(...$args){
