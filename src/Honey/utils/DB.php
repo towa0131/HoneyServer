@@ -35,11 +35,12 @@ class DB{
 	}
 
 	/**
-	   * @return mysqli
+	   * @return mysqli|null
 	   */
 	public static function connectDB(){
 		$mysqli = new \mysqli(self::$cache[1], self::$cache[2], self::$cache[3], self::$cache[4]);
 		$mysqli->options(MYSQLI_OPT_CONNECT_TIMEOUT, self::$cache[5]);
+		$mysqli->set_charset("utf-8");
 		if($mysqli->connect_errno){
 			MainLogger::getLogger()->error("§a[はにー]§4DBへの接続時にエラーが発生しました。");
 			MainLogger::getLogger()->error("§a[はにー]§4エラーメッセージ : " . $mysqli->connect_error);
