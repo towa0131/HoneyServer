@@ -339,6 +339,12 @@ class Main extends PluginBase implements Listener{
 		}
 	}
 
+	public function onDisable(){
+		if(DB::isConnect()){
+			DB::resetConnect();
+		}
+	}
+
 	/**
 	   * @return $this
 	   */

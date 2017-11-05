@@ -50,6 +50,16 @@ class DB{
 		return $mysqli; 
 	}
 
+	/**
+	   * @return bool
+	   */
+	public static function isConnect(){
+		if(isset(self::$cache[0]) && self::$cache[0] !== null){
+			return true;
+		}
+		return false;
+	}
+
 	public static function resetConnect(){
 		$mysqli = &self::$cache[0];
 		$mysqli->close(); //closeしてメモリを開放
