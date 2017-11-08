@@ -161,7 +161,7 @@ class Account{
 	   */
 	private function initAccount(){
 		$db = DB::getDB();
-		$data = "SELECT * FROM xuids";
+		$data = "SELECT * FROM xuids where xuid = '" . $this->xuid . "'";
 		if($result = $db->query($data)){
 			while($row = $result->fetch_assoc()){
 				if($this->xuid == $row["xuid"]){
@@ -173,7 +173,7 @@ class Account{
 				return false;
 			}
 		}
-		$data = "SELECT * FROM logindata";
+		$data = "SELECT * FROM logindata where xuid = '" . $this->xuid . "'";
 		if($result = $db->query($data)){
 			while($row = $result->fetch_assoc()){
 				if($this->xuid == $row["xuid"]){
@@ -183,7 +183,7 @@ class Account{
 				}
 			}
 		}
-		$data = "SELECT * FROM playerdata";
+		$data = "SELECT * FROM playerdata where xuid = '" . $this->xuid . "'";
 		if($result = $db->query($data)){
 			while($row = $result->fetch_assoc()){
 				if($this->xuid == $row["xuid"]){
@@ -195,7 +195,7 @@ class Account{
 				}
 			}
 		}
-		$data = "SELECT * FROM settings";
+		$data = "SELECT * FROM settings where xuid = '" . $this->xuid . "'";
 		if($result = $db->query($data)){
 			while($row = $result->fetch_assoc()){
 				if($this->xuid == $row["xuid"]){

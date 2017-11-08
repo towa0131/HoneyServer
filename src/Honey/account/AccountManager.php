@@ -81,7 +81,7 @@ class AccountManager{
 	   */
 	public static function hasAccount($xuid){
 		$db = DB::getDB();
-		$data = "SELECT * FROM xuids";
+		$data = "SELECT * FROM xuids where xuid = '" . $xuid . "'";
 		if($result = $db->query($data)){
 			while($row = $result->fetch_assoc()){
 				if($xuid == $row["xuid"]){
@@ -93,7 +93,7 @@ class AccountManager{
 				return false;
 			}
 		}
-		$data = "SELECT * FROM logindata";
+		$data = "SELECT * FROM logindata where xuid = '" . $xuid . "'";
 		if($result = $db->query($data)){
 			while($row = $result->fetch_assoc()){
 				if($xuid == $row["xuid"]){
@@ -167,7 +167,7 @@ class AccountManager{
 	   */
 	public static function getXuidByName($name){
 		$db = DB::getDB();
-		$data = "SELECT * FROM xuids";
+		$data = "SELECT * FROM xuids where name = '" . $name . "'";
 		if($result = $db->query($data)){
 			while($row = $result->fetch_assoc()){
 				if($name == $row["name"]){
@@ -179,7 +179,7 @@ class AccountManager{
 				return null;
 			}
 		}
-		$data = "SELECT * FROM logindata";
+		$data = "SELECT * FROM logindata where xuid = '" . $xuid . "'";
 		if($result = $db->query($data)){
 			while($row = $result->fetch_assoc()){
 				if($xuid == $row["xuid"]){
