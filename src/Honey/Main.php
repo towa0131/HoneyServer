@@ -304,9 +304,8 @@ class Main extends PluginBase implements Listener{
 										$account->addFormHistory($form);
 										break;
 									case 1: //XBox垢表示
-										$name = $account->getName();
 										$pk = new ShowProfilePacket();
-										$pk->username = $name;
+										$pk->xuid = $account->getXuid();
 										$player->dataPacket($pk);
 										break;
 								}
