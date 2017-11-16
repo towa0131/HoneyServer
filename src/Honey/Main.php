@@ -96,12 +96,22 @@ use Honey\item\MagicDiamond;
 
 class Main extends PluginBase implements Listener{
 
-	const STATUS_WAIT = 0; //待機時間(ゲーム人数が揃っていない状態)
-	const STATUS_LOAD = 1; //ロード時間(ゲーム人数が揃ってゲームが開始されるまでの時間)
-	const STATUS_PLAY = 2; //ゲームプレイ時間(ゲームが行われている状態)
+	const VERSION = "1.0.0";
+	const CODENAME = "Glass Rabbit";
+
+	const STATUS_ENABLE = 0; //プラグインのロード中
+	const STATUS_WAIT = 1; //待機時間(ゲーム人数が揃っていない状態)
+	const STATUS_LOAD = 2; //ロード時間(ゲーム人数が揃ってゲームが開始されるまでの時間)
+	const STATUS_PLAY = 3; //ゲームプレイ時間(ゲームが行われている状態)
+	const STATUS_END = 4; //ゲーム終了後
+	const STATUS_DISABLE = 5; //プラグインのアンロード中
 
 	/** @var $this */
 	private static $instance;
+
+	public function onLoad(){
+		$this->status = self::STATUS_ENABLE;
+	}
 
 	public function onEnable(){
 		$this->getServer()->getPluginManager()->registerEvents($this, $this);
@@ -342,6 +352,7 @@ class Main extends PluginBase implements Listener{
 		if(DB::isConnect()){
 			DB::resetConnect();
 		}
+		$this->status = self::STATUS_DISABLE;
 	}
 
 	/**
