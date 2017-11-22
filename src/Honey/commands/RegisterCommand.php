@@ -28,7 +28,7 @@ class RegisterCommand extends PluginCommand{
 	}
 
 	public function execute(CommandSender $sender, string $commandLabel, array $args){
-		$xuid = $sender->getXUID();
+		$xuid = $sender->getXuid();
 		if(!AccountManager::hasAccount($xuid)){
 			$form = new RegisterForm();
 			$pk = new ModalFormRequestPacket();

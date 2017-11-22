@@ -63,7 +63,7 @@ class AdminSettingsForm implements Form{
 			case self::MENU_USER_SELECT: //プレイヤー選択
 				$form = new SimpleForm("はにー鯖 | ユーザー設定", "§eプレイヤーを選択してください。");
 				foreach(Server::getInstance()->getOnlinePlayers() as $p){
-					if(AccountManager::hasAccount($p->getXUID())){
+					if(AccountManager::hasAccount($p->getXuid())){
 						$name = $p->getName();
 						$form->addButton(new Button($name));
 						$this->buttons[] = $name;

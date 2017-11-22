@@ -24,7 +24,7 @@ class AccountManager{
 	   */
 	public static function getAccount(Player $player){
 		$name = $player->getName();
-		$xuid = $player->getXUID();
+		$xuid = $player->getXuid();
 		if(self::hasAccount($xuid)){
 			if(!isset(self::$accounts[$xuid])){
 				$account = new Account($xuid);

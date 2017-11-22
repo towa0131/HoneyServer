@@ -167,7 +167,7 @@ class Main extends PluginBase implements Listener{
 	public function onJoin(PlayerJoinEvent $event){
 		$player = $event->getPlayer();
 		$name = $player->getName();
-		$xuid = $player->getXUID();
+		$xuid = $player->getXuid();
 		$this->loginTime[$name] = date("Y-m-d H:i:s");
 		if(!AccountManager::hasAccount($xuid)){
 			//アカウント登録がされてなければアカウント登録フォームを送信する
@@ -224,7 +224,7 @@ class Main extends PluginBase implements Listener{
 		$pk = $event->getPacket();
 		$player = $event->getPlayer();
 		$name = $player->getName();
-		$xuid = $player->getXUID();
+		$xuid = $player->getXuid();
 		$ip = $player->getAddress();
 		if($pk instanceof ServerSettingsRequestPacket){
 			$account = AccountManager::getAccount($player);
