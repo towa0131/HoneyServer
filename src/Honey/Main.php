@@ -94,6 +94,8 @@ use Honey\generator\Honey;
 
 use Honey\item\MagicDiamond;
 
+use Honey\plugin\HoneyPluginLoader;
+
 class Main extends PluginBase implements Listener{
 
 	const VERSION = "1.0.0";
@@ -108,6 +110,8 @@ class Main extends PluginBase implements Listener{
 
 	/** @var $this */
 	private static $instance;
+	/** @var HoneyPluginLoader */
+	private $pluginLoader;
 
 	public function onLoad(){
 		$this->status = self::STATUS_ENABLE;
@@ -128,6 +132,7 @@ class Main extends PluginBase implements Listener{
 			$this->config->getNested("DB.database"),
 			$this->config->getNested("DB.timeout"));
 		self::$instance = $this;
+		$this->pluginLoader = new HoneyPluginLoader();
 		$commands = new CommandManager($this);
 		$this->getServer()->getScheduler()->scheduleRepeatingTask(new CallbackTask([$this,"onMain"]), 20);
 		$this->getLogger()->info("§a[はにー]§bゲームを初期化しています...");
@@ -137,6 +142,7 @@ class Main extends PluginBase implements Listener{
 		$this->waitTime = $this->config->getNested("Game.wait-time");
 		$this->playerModule = new PlayerModule();
 		Generator::addGenerator(Honey::class, "honey"); //はにージェネレータを登録
+		$this->pluginLoader->loadPlugin($this->getServer()->getPluginPath() . "HoneyMusic_v1.0.0");
 	}
 
 	public function onMain(){
@@ -214,10 +220,10 @@ class Main extends PluginBase implements Listener{
 		$x = $block->getX();
 		$y = $block->getY();
 		$z = $block->getZ();
-		$form = new AdminSettingsForm();
+		/*$form = new AdminSettingsForm();
 		$this->playerModule->sendForm($player, $form, FormIds::FORM_ADMIN_SETTINGS);
 		$account = AccountManager::getAccount($player);
-		$account->addFormHistory($form);
+		$account->addFormHistory($form);*/
 	}
 
 	public function onReceive(DataPacketReceiveEvent $event){
