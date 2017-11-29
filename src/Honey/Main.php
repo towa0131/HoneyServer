@@ -170,6 +170,16 @@ class Main extends PluginBase implements Listener{
 		}
 	}
 
+	public function onPreLogin(PlayerPreLoginEvent $event){
+		$player = $event->getPlayer();
+		$xuid = $player->getXuid();
+		if($xuid === ""){ //XBoxアカウント認証回避対策
+			$player->setKickMessage("§4Error #001\n§cXBoxへログインをしてください。");
+			$event->setCancelled(true);
+			return false;
+		}
+	}
+
 	public function onJoin(PlayerJoinEvent $event){
 		$player = $event->getPlayer();
 		$name = $player->getName();

@@ -17,9 +17,11 @@ abstract class HoneyPluginBase{
 	const TYPE_NAME = 1;
 	const TYPE_XUID = 2;
 
-	public function onEnable(){}
+	public function onEnable(){$this->onTest("aahs");}
 
 	public function onDisable(){}
+
+	abstract public function onTest($d);
 
 	/**
 	   * @param string $xuid
