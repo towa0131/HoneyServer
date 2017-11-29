@@ -9,7 +9,10 @@ use pocketmine\plugin\PluginBase;
 
 use Honey\Main;
 
+use Honey\account\Account;
 use Honey\account\AccountManager;
+
+use Honey\form\Form;
 
 abstract class HoneyPluginBase{
 
