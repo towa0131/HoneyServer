@@ -67,6 +67,7 @@ use pocketmine\level\generator\Generator;
 use pocketmine\math\Vector3;
 
 use Honey\utils\DB;
+use Honey\utils\Utils;
 
 use Honey\account\AccountManager;
 
@@ -142,6 +143,7 @@ class Main extends PluginBase implements Listener{
 		$this->waitTime = $this->config->getNested("Game.wait-time");
 		$this->playerModule = new PlayerModule();
 		Generator::addGenerator(Honey::class, "honey"); //はにージェネレータを登録
+		Utils::callError("#001");
 		$this->pluginLoader->loadPlugin($this->getServer()->getPluginPath() . "HoneyMusic_v1.0.0");
 	}
 
