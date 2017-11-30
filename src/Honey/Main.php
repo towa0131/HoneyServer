@@ -179,6 +179,7 @@ class Main extends PluginBase implements Listener{
 		if($xuid === ""){ //XBoxアカウント認証回避対策
 			$player->setKickMessage("§4Error #001\n§cXBoxへログインをしてください。");
 			$event->setCancelled(true);
+			Utils::callError("#001");
 			return false;
 		}
 	}

@@ -28,7 +28,7 @@ class DB{
 	   */
 	public static function getDB(){
 		if(self::$cache[0] == null){ //キャッシュにmysqliインスタンスがなければデータベースに接続
-			//キャッシュ配列にmysqliインスタンスをいれることで再度使用する時のインスタンス作成を省き、高速している
+			//キャッシュ配列にmysqliインスタンスをいれることで再度使用する時のインスタンス作成を省き、高速化している
 			self::$cache[0] = self::connectDB(); 
 		}
 		return self::$cache[0];
@@ -44,6 +44,7 @@ class DB{
 		if($mysqli->connect_errno){
 			MainLogger::getLogger()->error("§a[はにー]§4DBへの接続時にエラーが発生しました。");
 			MainLogger::getLogger()->error("§a[はにー]§4エラーメッセージ : " . $mysqli->connect_error);
+			Utils::callError("#002");
 			return null; //接続時にエラー発生
 		}
 		MainLogger::getLogger()->info("§a[はにー]§bDBへの接続に成功しました。");
