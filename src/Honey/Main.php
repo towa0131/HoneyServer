@@ -93,6 +93,8 @@ use Honey\task\SendFaceTask;
 
 use Honey\generator\Honey;
 
+use Honey\event\system\SystemErrorEvent;
+
 use Honey\item\MagicDiamond;
 
 use Honey\plugin\HoneyPluginLoader;
@@ -143,8 +145,7 @@ class Main extends PluginBase implements Listener{
 		$this->waitTime = $this->config->getNested("Game.wait-time");
 		$this->playerModule = new PlayerModule();
 		Generator::addGenerator(Honey::class, "honey"); //はにージェネレータを登録
-		Utils::callError("#001");
-		$this->pluginLoader->loadPlugin($this->getServer()->getPluginPath() . "HoneyMusic_v1.0.0");
+		//$this->pluginLoader->loadPlugin($this->getServer()->getPluginPath() . "HoneyMusic_v1.0.0");
 	}
 
 	public function onMain(){
@@ -364,6 +365,11 @@ class Main extends PluginBase implements Listener{
 					break;
 			}
 		}
+	}
+
+	public function onError(SystemErrorEvent $ev){
+		$errno = $ev->getErrNo();
+		$errmsg = $ev->getErrMsg();
 	}
 
 	public function onDisable(){

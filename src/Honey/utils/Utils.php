@@ -6,6 +6,8 @@ use pocketmine\Server;
 
 use Honey\Main;
 
+use Honey\event\system\SystemErrorEvent;
+
 class Utils{
 
 	public static function callError($errno){
@@ -15,10 +17,11 @@ class Utils{
 		foreach($errors as $e){
 			$data = explode(":", $e);
 			if($data[0] === $errno){
-				echo "Error". $data[0] . ":" . $data[1];
+				Server::getInstance()->getPluginManager()->callEvent(new SystemErrorEvent($data[0], $data[1]));
 				return true;
 			}
 		}
+		Server::getInstance()->getPluginManager()->callEvent(new SystemErrorEvent("#000", "Unknown Error"));
 		return false;
 	}
 }
