@@ -201,6 +201,7 @@ class Main extends PluginBase implements Listener{
 			$account = AccountManager::getAccount($player);
 			if($account == null){
 				$player->sendMessage("§a[はにー]§4エラーが発生しました。再度ログインをお願いします。");
+				Utils::callError("#003");
 			}else{
 				$player->sendMessage("§a[はにー]§bアカウントの読み込みに成功！");
 			}
@@ -297,6 +298,7 @@ class Main extends PluginBase implements Listener{
 							$player->sendMessage("§a[はにー]§4エラーが発生しました。");
 							$form = new RegisterForm();
 							$this->playerModule->sendForm($player, $form, FormIds::FORM_REGISTER);
+							Utils::callError("#004");
 						}
 					}else{ //確認用パスワードがまちがっていた場合
 						$form = new RegisterForm();
