@@ -209,14 +209,22 @@ class Main extends PluginBase implements Listener{
 		$this->playerModule->sendLobbyItem($player);
 		if($this->status == self::STATUS_PLAY){
 			$items = [
-				"\Honey\item\MagicDiamond" => 264
+				"\Honey\item\MagicCoal" => [263, 0],
+				"\Honey\item\MagicDiamond" => [264, 0],
+				"\Honey\item\MagicIron" => [265, 0],
+				"\Honey\item\MagicGold" => [266, 0],
+				"\Honey\item\MagicRedstone" => [331, 0],
+				"\Honey\item\MagicLapisLazuli" => [351, 4],
+				"\Honey\item\MagicEmerald" => [388, 0],
 			];
 			foreach($player->getInventory()->getContents() as $slot => $item){
-				$result = array_search($item->getId(), $items);
-				if($result !== false){
-					$magicitem = new $result(0, $item->getNamedTag());
-					$magicitem->setCount($item->getCount());
-					$player->getInventory()->setItem($slot, $magicitem);
+				foreach($items as $key => $value){
+					if($value[0] === $item->getId() && $value[1] === $item->getDamage()){
+						$magicitem = new $key($value[1], $item->getNamedTag());
+						$magicitem->setCount($item->getCount());
+						$player->getInventory()->setItem($slot, $magicitem);
+						break;
+					}
 				}
 			}
 		}
