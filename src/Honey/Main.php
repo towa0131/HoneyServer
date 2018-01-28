@@ -162,7 +162,7 @@ class Main extends PluginBase implements Listener{
 					case $this->config->getNested("Game.wait-time"):
 						//人数が揃ったことをプレイヤーに通知
 						foreach($this->getServer()->getOnlinePlayers() as $p){
-							// TODO
+							
 						}
 						break;
 				}
