@@ -44,7 +44,7 @@ class DB{
 		if($mysqli->connect_errno){
 			MainLogger::getLogger()->error("§a[はにー]§4DBへの接続時にエラーが発生しました。");
 			MainLogger::getLogger()->error("§a[はにー]§4エラーメッセージ : " . $mysqli->connect_error);
-			Utils::callError("#002");
+			Utils::callError(ErrNo::ERRNO_002);
 			return null; //接続時にエラー発生
 		}
 		MainLogger::getLogger()->info("§a[はにー]§bDBへの接続に成功しました。");

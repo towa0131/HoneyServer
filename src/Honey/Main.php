@@ -68,6 +68,7 @@ use pocketmine\math\Vector3;
 
 use Honey\utils\DB;
 use Honey\utils\Utils;
+use Honey\utils\ErrNo;
 
 use Honey\account\AccountManager;
 
@@ -146,6 +147,7 @@ class Main extends PluginBase implements Listener{
 		$this->playerModule = new PlayerModule();
 		Generator::addGenerator(Honey::class, "honey"); //はにージェネレータを登録
 		//$this->pluginLoader->loadPlugin($this->getServer()->getPluginPath() . "HoneyMusic_v1.0.0");
+		Utils::callError(ErrNo::ERRNO_001);
 	}
 
 	public function onMain(){
@@ -179,7 +181,7 @@ class Main extends PluginBase implements Listener{
 		if($xuid === ""){ //XBoxアカウント認証回避対策
 			$player->setKickMessage("§4Error #001\n§cXBoxへログインをしてください。");
 			$event->setCancelled(true);
-			Utils::callError("#001");
+			Utils::callError(ErrNo::ERRNO_001);
 			return false;
 		}
 	}
@@ -201,7 +203,7 @@ class Main extends PluginBase implements Listener{
 			$account = AccountManager::getAccount($player);
 			if($account == null){
 				$player->sendMessage("§a[はにー]§4エラーが発生しました。再度ログインをお願いします。");
-				Utils::callError("#003");
+				Utils::callError(ErrNo::ERRNO_003);
 			}else{
 				$player->sendMessage("§a[はにー]§bアカウントの読み込みに成功！");
 			}
@@ -245,8 +247,7 @@ class Main extends PluginBase implements Listener{
 		$z = $block->getZ();
 		/*$form = new AdminSettingsForm();
 		$this->playerModule->sendForm($player, $form, FormIds::FORM_ADMIN_SETTINGS);
-		$account = AccountManager::getAccount($player);
-		$account->addFormHistory($form);*/
+		$account = AccountManager::getAccount($player);*/
 	}
 
 	public function onReceive(DataPacketReceiveEvent $event){
@@ -298,7 +299,7 @@ class Main extends PluginBase implements Listener{
 							$player->sendMessage("§a[はにー]§4エラーが発生しました。");
 							$form = new RegisterForm();
 							$this->playerModule->sendForm($player, $form, FormIds::FORM_REGISTER);
-							Utils::callError("#004");
+							Utils::callError(ErrNo::ERRNO_004);
 						}
 					}else{ //確認用パスワードがまちがっていた場合
 						$form = new RegisterForm();
@@ -313,8 +314,6 @@ class Main extends PluginBase implements Listener{
 							if(is_numeric($rawdata)){
 								$form = new AdminSettingsForm(0, null, $rawdata);
 								$this->playerModule->sendForm($player, $form, FormIds::FORM_ADMIN_SETTINGS);
-								$account = AccountManager::getAccount($player);
-								$account->addFormHistory($form);
 							}
 							break;
 						case AdminSettingsForm::MENU_USER_SELECT: //ユーザーの設定セレクト画面の表示
@@ -324,8 +323,6 @@ class Main extends PluginBase implements Listener{
 								if($account->isOnline()){
 									$form = new AdminSettingsForm(2, $account);
 									$this->playerModule->sendForm($player, $form, FormIds::FORM_ADMIN_SETTINGS);
-									$account = AccountManager::getAccount($player);
-									$account->addFormHistory($form);
 								}else{
 									$player->sendMessage("§a[はにー]§4エラー : プレイヤーが見つかりません。");
 								}
@@ -340,8 +337,6 @@ class Main extends PluginBase implements Listener{
 									case 0: //アカウント操作画面
 										$form = new AdminSettingsForm(AdminSettingsForm::MENU_USER_SETTINGS, $account);
 										$this->playerModule->sendForm($player, $form, FormIds::FORM_ADMIN_SETTINGS);
-										$account = AccountManager::getAccount($player);
-										$account->addFormHistory($form);
 										break;
 									case 1: //XBox垢表示
 										$pk = new ShowProfilePacket();
@@ -381,6 +376,7 @@ class Main extends PluginBase implements Listener{
 	public function onError(SystemErrorEvent $ev){
 		$errno = $ev->getErrNo();
 		$errmsg = $ev->getErrMsg();
+		$this->getLogger()->info("Error : " . $errno . "/" . $errmsg);
 	}
 
 	public function onDisable(){
