@@ -25,7 +25,7 @@ Server:
  #cache = キャッシュ変数
  tempinventory-savetype: file
  #一時インベントリデータの保存先(保存方法でfileを選んだときのみ有効)
- tempinventory-filepath: datapath/tempinv
+ tempinventory-filepath: /plugins/HoneyServer/
 
 # ユーザー設定
 User:
@@ -78,6 +78,8 @@ Point:
  lapislazuli-ore: 5
  #レッドストーン鉱石
  redstone-ore: 2
+ #エメラルド鉱石
+ emerald-ore: 15
  #ルビー鉱石
  ruby-ore: 10
  #サファイア鉱石
@@ -90,29 +92,33 @@ Exchange:
  #価格変動の有効化
  price-change: true
  #価格変動の間隔(秒)(価格変動が有効化されてるときのみ有効)
- price-change-time: 600
+ price-change-time: 60
  #価格変動の範囲(デフォルトからの変動範囲)
  #注意 : デフォルト値からマイナスになる変動は行われません。
- price-change-range: 1000
+ price-change-range: 500
  #石炭鉱石
- coal-ore: 200
+ coal-ore: 100
  #鉄鉱石
- iron-ore: 800
+ iron-ore: 300
  #銅鉱石
- copper-ore: 1200
+ copper-ore: 500
  #銀鉱石
- silver-ore: 2000
+ silver-ore: 1000
  #金鉱石
- gold-ore: 2300
+ gold-ore: 2000
  #ダイヤモンド鉱石
- diamond-ore: 7000
+ diamond-ore: 6000
  #ラピスラズリ鉱石
- lapislazuli-ore: 1300
+ lapislazuli-ore: 1000
  #レッドストーン鉱石
- redstone-ore: 400
+ redstone-ore: 200
+ #エメラルド鉱石
+ emerald-ore: 2500
  #ルビー鉱石
  ruby-ore: 7000
  #サファイア鉱石
  sapphire-ore: 6500
+ #琥珀
+ amber-ore: 5000
 
 ...
