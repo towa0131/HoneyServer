@@ -16,6 +16,8 @@ use pocketmine\nbt\tag\StringTag;
 use pocketmine\item\Item;
 use pocketmine\item\WrittenBook;
 
+use Honey\account\AccountManager;
+
 class PlayerModule{
 
 	/**
@@ -37,6 +39,10 @@ class PlayerModule{
 		$pk->formId = $formId;
 		$pk->formData = json_encode($form->getFormData());
 		$player->dataPacket($pk);
+		$account = AccountManager::getAccount($player);
+		if($account !== null){
+			$account->addFormHistory($form);
+		}
 	}
 
 	/**

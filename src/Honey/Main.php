@@ -100,8 +100,6 @@ use Honey\item\MagicDiamond;
 
 use Honey\plugin\HoneyPluginLoader;
 
-use pocketmine\event\server\QueryRegenerateEvent;
-
 class Main extends PluginBase implements Listener{
 
 	const VERSION = "1.0.0";
@@ -246,9 +244,10 @@ class Main extends PluginBase implements Listener{
 		$x = $block->getX();
 		$y = $block->getY();
 		$z = $block->getZ();
-		/*$form = new AdminSettingsForm();
-		$this->playerModule->sendForm($player, $form, FormIds::FORM_ADMIN_SETTINGS);
-		$account = AccountManager::getAccount($player);*/
+		/*
+			$form = new AdminSettingsForm();
+			$this->playerModule->sendForm($player, $form, FormIds::FORM_ADMIN_SETTINGS);
+		*/
 	}
 
 	public function onReceive(DataPacketReceiveEvent $event){
@@ -265,7 +264,7 @@ class Main extends PluginBase implements Listener{
 				$pk->formId = FormIds::MENU_USER_SETTINGS;
 				$pk->formData = json_encode($form->getFormData());
 				$player->dataPacket($pk);
-				$form->addFormHistory($account);
+				$account->addFormHistory($form);
 			}
 		}
 		if($pk instanceof ModalFormResponsePacket){
@@ -378,11 +377,6 @@ class Main extends PluginBase implements Listener{
 		$errno = $ev->getErrNo();
 		$errmsg = $ev->getErrMsg();
 		$this->getLogger()->info("Error : " . $errno . "/" . $errmsg);
-	}
-
-	public function onQueryRegenerateEvent(QueryRegenerateEvent $ev){
-		$ev->setMaxPlayerCount(1452);
-		$ev->setPlayerCount(1411);
 	}
 
 	public function onDisable(){
