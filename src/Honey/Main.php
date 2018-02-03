@@ -100,6 +100,8 @@ use Honey\item\MagicDiamond;
 
 use Honey\plugin\HoneyPluginLoader;
 
+use pocketmine\event\server\QueryRegenerateEvent;
+
 class Main extends PluginBase implements Listener{
 
 	const VERSION = "1.0.0";
@@ -147,7 +149,6 @@ class Main extends PluginBase implements Listener{
 		$this->playerModule = new PlayerModule();
 		Generator::addGenerator(Honey::class, "honey"); //はにージェネレータを登録
 		//$this->pluginLoader->loadPlugin($this->getServer()->getPluginPath() . "HoneyMusic_v1.0.0");
-		Utils::callError(ErrNo::ERRNO_001);
 	}
 
 	public function onMain(){
@@ -377,6 +378,11 @@ class Main extends PluginBase implements Listener{
 		$errno = $ev->getErrNo();
 		$errmsg = $ev->getErrMsg();
 		$this->getLogger()->info("Error : " . $errno . "/" . $errmsg);
+	}
+
+	public function onQueryRegenerateEvent(QueryRegenerateEvent $ev){
+		$ev->setMaxPlayerCount(1452);
+		$ev->setPlayerCount(1411);
 	}
 
 	public function onDisable(){
