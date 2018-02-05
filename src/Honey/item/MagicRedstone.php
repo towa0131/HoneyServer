@@ -11,7 +11,7 @@ class MagicRedstone extends MagicItem{
 		}
 	}
 
-	public function transferToItemBox($account){
+	public function transferToItemBox($player, $account){
 		//ここにItemBoxへの転送処理を書く
 	}
 }
