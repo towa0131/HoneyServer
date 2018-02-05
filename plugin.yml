@@ -28,15 +28,17 @@ commands:
   aliases: [stat]
  report:
   description: "違反ユーザーを報告します"
-  usage: "/report <name> <reason>"
+  usage: "/report"
   aliases: [rp]
- union:
-  description: "組合関係のコマンドです"
-  usage: "/union [join|quit|create|invite|deny|destroy]"
+ guild:
+  description: "ギルド関係のコマンドです"
+  usage: "/guild [join|quit|create|invite|deny|destroy]"
  entry:
   description: "ゲームへ参加します"
   usage: "/entry"
-  aliases: [e, join]
+  aliases: [join]
+  usage: "/entry"
+  aliases: [join]
 permissions:
  admin.command:
   default: op
