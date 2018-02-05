@@ -212,7 +212,7 @@ class Main extends PluginBase implements Listener{
 		}
 		$this->getServer()->getScheduler()->scheduleAsyncTask(new SendFaceTask($name, $player->getSkin()->getSkinData()));
 		$this->playerModule->sendLobbyItem($player);
-		//if($this->status == self::STATUS_PLAY){
+		if($this->status == self::STATUS_PLAY){
 			$items = [
 				"\Honey\item\MagicCoal" => [263, 0],
 				"\Honey\item\MagicDiamond" => [264, 0],
@@ -233,7 +233,7 @@ class Main extends PluginBase implements Listener{
 					}
 				}
 			}
-		//}
+		}
 	}
 
 	public function onBreak(BlockBreakEvent $event){
