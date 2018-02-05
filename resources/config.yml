@@ -26,6 +26,10 @@ Server:
  tempinventory-savetype: file
  #一時インベントリデータの保存先(保存方法でfileを選んだときのみ有効)
  tempinventory-filepath: /plugins/HoneyServer/
+ #自動再起動の有効化
+ auto-restart: false
+ #サーバー再起動時の自動参加の有効化
+ auto-join: true
 
 # ユーザー設定
 User:
