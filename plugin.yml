@@ -37,8 +37,6 @@ commands:
   description: "ゲームへ参加します"
   usage: "/entry"
   aliases: [join]
-  usage: "/entry"
-  aliases: [join]
 permissions:
  admin.command:
   default: op
