@@ -148,7 +148,6 @@ class Main extends PluginBase implements Listener{
 		$this->playerModule = new PlayerModule();
 		Generator::addGenerator(Honey::class, "honey"); //はにージェネレータを登録
 		//$this->pluginLoader->loadPlugin($this->getServer()->getPluginPath() . "HoneyMusic_v1.0.0");
-		Utils::callError(ErrNo::ERRNO_001);
 	}
 
 	public function onMain(){
@@ -246,9 +245,11 @@ class Main extends PluginBase implements Listener{
 		$x = $block->getX();
 		$y = $block->getY();
 		$z = $block->getZ();
-		/*$form = new AdminSettingsForm();
-		$this->playerModule->sendForm($player, $form, FormIds::FORM_ADMIN_SETTINGS);
-		$account = AccountManager::getAccount($player);*/
+		/*
+			$form = new AdminSettingsForm();
+			$this->playerModule->sendForm($player, $form, FormIds::FORM_ADMIN_SETTINGS);
+			$account = AccountManager::getAccount($player);
+		*/
 	}
 
 	public function onReceive(DataPacketReceiveEvent $event){
