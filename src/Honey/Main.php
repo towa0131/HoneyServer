@@ -21,6 +21,7 @@ use pocketmine\event\player\PlayerJoinEvent;
 use pocketmine\event\player\PlayerQuitEvent;
 use pocketmine\event\player\PlayerRespawnEvent;
 use pocketmine\event\player\PlayerDeathEvent;
+use pocketmine\event\player\PlayerDropItemEvent;
 use pocketmine\event\player\PlayerChatEvent;
 use pocketmine\event\player\PlayerPreLoginEvent;
 use pocketmine\event\player\PlayerInteractEvent;
@@ -96,7 +97,7 @@ use Honey\generator\Honey;
 
 use Honey\event\system\SystemErrorEvent;
 
-use Honey\item\MagicDiamond;
+use Honey\item\MagicItem;
 
 use Honey\plugin\HoneyPluginLoader;
 
@@ -138,6 +139,7 @@ class Main extends PluginBase implements Listener{
 		self::$instance = $this;
 		$this->pluginLoader = new HoneyPluginLoader();
 		$commands = new CommandManager($this);
+		$itemProvider = new ItemProvider();
 		$this->getServer()->getScheduler()->scheduleRepeatingTask(new CallbackTask([$this,"onMain"]), 20);
 		$this->getServer()->getScheduler()->scheduleRepeatingTask(new CallbackTask([$this,"onDBRefresh"]), 300);
 		$this->getLogger()->info("§a[はにー]§bゲームを初期化しています...");
@@ -210,7 +212,7 @@ class Main extends PluginBase implements Listener{
 		}
 		$this->getServer()->getScheduler()->scheduleAsyncTask(new SendFaceTask($name, $player->getSkin()->getSkinData()));
 		$this->playerModule->sendLobbyItem($player);
-		if($this->status == self::STATUS_PLAY){
+		//if($this->status == self::STATUS_PLAY){
 			$items = [
 				"\Honey\item\MagicCoal" => [263, 0],
 				"\Honey\item\MagicDiamond" => [264, 0],
@@ -218,19 +220,20 @@ class Main extends PluginBase implements Listener{
 				"\Honey\item\MagicGold" => [266, 0],
 				"\Honey\item\MagicRedstone" => [331, 0],
 				"\Honey\item\MagicLapisLazuli" => [351, 4],
-				"\Honey\item\MagicEmerald" => [388, 0],
+				"\Honey\item\MagicEmerald" => [388, 0]
 			];
 			foreach($player->getInventory()->getContents() as $slot => $item){
 				foreach($items as $key => $value){
 					if($value[0] === $item->getId() && $value[1] === $item->getDamage()){
 						$magicitem = new $key($value[1], $item->getNamedTag());
 						$magicitem->setCount($item->getCount());
+						ItemProvider::getInstance()->setUndroppable($magicitem);
 						$player->getInventory()->setItem($slot, $magicitem);
 						break;
 					}
 				}
 			}
-		}
+		//}
 	}
 
 	public function onBreak(BlockBreakEvent $event){
@@ -375,9 +378,16 @@ class Main extends PluginBase implements Listener{
 		}
 	}
 
-	public function onError(SystemErrorEvent $ev){
-		$errno = $ev->getErrNo();
-		$errmsg = $ev->getErrMsg();
+	public function onDropItem(PlayerDropItemEvent $event){
+		$item = $event->getItem();
+		if(ItemProvider::getInstance()->isUndroppable($item)){
+			$event->setCancelled();
+		}
+	}
+
+	public function onError(SystemErrorEvent $event){
+		$errno = $event->getErrNo();
+		$errmsg = $event->getErrMsg();
 	}
 
 	public function onDBRefresh(){
