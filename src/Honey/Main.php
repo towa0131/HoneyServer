@@ -139,6 +139,7 @@ class Main extends PluginBase implements Listener{
 		$this->pluginLoader = new HoneyPluginLoader();
 		$commands = new CommandManager($this);
 		$this->getServer()->getScheduler()->scheduleRepeatingTask(new CallbackTask([$this,"onMain"]), 20);
+		$this->getServer()->getScheduler()->scheduleRepeatingTask(new CallbackTask([$this,"onDBRefresh"]), 300);
 		$this->getLogger()->info("§a[はにー]§bゲームを初期化しています...");
 		$this->time = 0;
 		$this->loginTime = [];
@@ -147,6 +148,7 @@ class Main extends PluginBase implements Listener{
 		$this->playerModule = new PlayerModule();
 		Generator::addGenerator(Honey::class, "honey"); //はにージェネレータを登録
 		//$this->pluginLoader->loadPlugin($this->getServer()->getPluginPath() . "HoneyMusic_v1.0.0");
+		Utils::callError(ErrNo::ERRNO_001);
 	}
 
 	public function onMain(){
@@ -244,10 +246,9 @@ class Main extends PluginBase implements Listener{
 		$x = $block->getX();
 		$y = $block->getY();
 		$z = $block->getZ();
-		/*
-			$form = new AdminSettingsForm();
-			$this->playerModule->sendForm($player, $form, FormIds::FORM_ADMIN_SETTINGS);
-		*/
+		/*$form = new AdminSettingsForm();
+		$this->playerModule->sendForm($player, $form, FormIds::FORM_ADMIN_SETTINGS);
+		$account = AccountManager::getAccount($player);*/
 	}
 
 	public function onReceive(DataPacketReceiveEvent $event){
@@ -264,7 +265,7 @@ class Main extends PluginBase implements Listener{
 				$pk->formId = FormIds::MENU_USER_SETTINGS;
 				$pk->formData = json_encode($form->getFormData());
 				$player->dataPacket($pk);
-				$account->addFormHistory($form);
+				$form->addFormHistory($account);
 			}
 		}
 		if($pk instanceof ModalFormResponsePacket){
@@ -376,7 +377,10 @@ class Main extends PluginBase implements Listener{
 	public function onError(SystemErrorEvent $ev){
 		$errno = $ev->getErrNo();
 		$errmsg = $ev->getErrMsg();
-		$this->getLogger()->info("Error : " . $errno . "/" . $errmsg);
+	}
+
+	public function onDBRefresh(){
+		DB::refreshConnect();
 	}
 
 	public function onDisable(){

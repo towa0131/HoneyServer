@@ -37,7 +37,7 @@ class DB{
 	/**
 	   * @return mysqli|null
 	   */
-	public static function connectDB(){
+	public static function connectDB($isRefresh = false){
 		$mysqli = new \mysqli(self::$cache[1], self::$cache[2], self::$cache[3], self::$cache[4]);
 		$mysqli->options(MYSQLI_OPT_CONNECT_TIMEOUT, self::$cache[5]);
 		$mysqli->set_charset("utf-8");
@@ -47,7 +47,9 @@ class DB{
 			Utils::callError(ErrNo::ERRNO_002);
 			return null; //接続時にエラー発生
 		}
-		MainLogger::getLogger()->info("§a[はにー]§bDBへの接続に成功しました。");
+		if(!$isRefresh){
+			MainLogger::getLogger()->info("§a[はにー]§bDBへの接続に成功しました。");
+		}
 		return $mysqli; 
 	}
 
@@ -65,6 +67,10 @@ class DB{
 		$mysqli = &self::$cache[0];
 		$mysqli->close(); //closeしてメモリを開放
 		$mysqli = null; //$cacheに格納されているmysqliインスタンスを初期化
+	}
+
+	public static function refreshConnect(){
+		self::$cache[0] = self::connectDB(true); 
 	}
 
 	public static function setConfig(...$args){
