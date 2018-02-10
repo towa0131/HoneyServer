@@ -269,7 +269,7 @@ class Main extends PluginBase implements Listener{
 				$pk->formId = FormIds::MENU_USER_SETTINGS;
 				$pk->formData = json_encode($form->getFormData());
 				$player->dataPacket($pk);
-				$form->addFormHistory($account);
+				$account->addFormHistory($form);
 			}
 		}
 		if($pk instanceof ModalFormResponsePacket){
