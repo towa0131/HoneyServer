@@ -50,7 +50,7 @@ class PlayerModule{
 	   */
 	public function sendLobbyItem(Player $player){
 		//本配布(鉱石についての説明とかを記載する予定)
-		$path = __DIR__ . "/images/";
+		/*$path = __DIR__ . "/images/";
 		$imgdata = file_get_contents($path . "logo.png");
 		$photo = new PhotoTransferPacket;
 		$photo->photoName = $path . "logo.png";
@@ -71,6 +71,7 @@ class PlayerModule{
 		}
 		$book->setbookId(0);
 		$book->setPageImage(0, $path . "logo.png");
-		$player->getInventory()->addItem($book);
+		$player->getInventory()->addItem($book);*/
+		$player->getInventory()->addItem(Item::get(276, 0, 1));
 	}
 }

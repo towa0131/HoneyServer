@@ -90,6 +90,8 @@ use Honey\form\RegisterForm;
 use Honey\form\UserSettingsForm;
 use Honey\form\AdminSettingsForm;
 
+use Honey\inventory\SelectGameInventory;
+
 use Honey\task\RegisterFormTask;
 use Honey\task\SendFaceTask;
 
@@ -211,7 +213,6 @@ class Main extends PluginBase implements Listener{
 			}
 		}
 		$this->getServer()->getScheduler()->scheduleAsyncTask(new SendFaceTask($name, $player->getSkin()->getSkinData()));
-		$this->playerModule->sendLobbyItem($player);
 		if($this->status == self::STATUS_PLAY){
 			$items = [
 				"\Honey\item\MagicCoal" => [263, 0],
@@ -234,6 +235,8 @@ class Main extends PluginBase implements Listener{
 				}
 			}
 		}
+		$player->getInventory()->clearAll();
+		$this->playerModule->sendLobbyItem($player);
 	}
 
 	public function onBreak(BlockBreakEvent $event){
@@ -248,6 +251,16 @@ class Main extends PluginBase implements Listener{
 		$x = $block->getX();
 		$y = $block->getY();
 		$z = $block->getZ();
+		$item = $player->getInventory()->getItemInHand();
+		$level = $player->getLevel();
+		if($level->getFolderName() == $this->config->getNested("Level.default-world")){
+			switch($item->getId()){
+				case 276:
+					$inventory = new SelectGameInventory($this, $player);
+					$player->addWindow($inventory);
+					break;
+			}
+		}
 		/*
 			$form = new AdminSettingsForm();
 			$this->playerModule->sendForm($player, $form, FormIds::FORM_ADMIN_SETTINGS);
