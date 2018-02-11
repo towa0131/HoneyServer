@@ -26,7 +26,7 @@ class UserSettingsForm implements Form{
 	public function getFormData(){
 		$account = $this->account;
 		$form = new CustomForm("はにー鯖");
-		$form->addIconUrl("http://108.61.182.170/apple-touch-icon.jpg");
+		$form->addIconUrl("https://honey-mc.net/apple-touch-icon.jpg");
 		$form->addElement(new Toggle("採掘時の浮遊文字の表示", $account->isShowFloating()));
 		$form->addElement(new Toggle("座標の表示", $account->isShowCoordinate()));
 		$form->addElement(new Toggle("気温/天気の表示", $account->isShowTemperature()));
