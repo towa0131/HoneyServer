@@ -72,6 +72,8 @@ class PlayerModule{
 		$book->setbookId(0);
 		$book->setPageImage(0, $path . "logo.png");
 		$player->getInventory()->addItem($book);*/
-		$player->getInventory()->addItem(Item::get(276, 0, 1));
+		$item = Item::get(276, 0, 1);
+		ItemProvider::getInstance()->setUndroppable($item);
+		$player->getInventory()->addItem($item);
 	}
 }
