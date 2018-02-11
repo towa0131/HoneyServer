@@ -236,6 +236,7 @@ class Main extends PluginBase implements Listener{
 			}
 		}
 		$player->getInventory()->clearAll();
+		$player->setGamemode(2);
 		$this->playerModule->sendLobbyItem($player);
 	}
 
