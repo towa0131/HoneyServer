@@ -27,6 +27,8 @@ use pocketmine\event\player\PlayerPreLoginEvent;
 use pocketmine\event\player\PlayerInteractEvent;
 use pocketmine\event\player\PlayerMoveEvent;
 
+use pocketmine\event\inventory\InventoryTransactionEvent;
+
 use pocketmine\event\block\BlockBreakEvent;
 
 use pocketmine\event\server\DataPacketReceiveEvent;
@@ -36,6 +38,7 @@ use pocketmine\network\mcpe\protocol\AddPlayerPacket;
 use pocketmine\network\mcpe\protocol\BookEditPacket;
 use pocketmine\network\mcpe\protocol\BossEventPacket;
 use pocketmine\network\mcpe\protocol\BlockEventPacket;
+use pocketmine\network\mcpe\protocol\ContainerClosePacket;
 use pocketmine\network\mcpe\protocol\LevelSoundEventPacket;
 use pocketmine\network\mcpe\protocol\LoginPacket;
 use pocketmine\network\mcpe\protocol\PhotoTransferPacket;
@@ -50,9 +53,10 @@ use pocketmine\network\mcpe\protocol\TransferPacket;
 use pocketmine\network\mcpe\protocol\UpdateAttributesPacket;
 use pocketmine\network\mcpe\protocol\UpdateBlockPacket;
 use pocketmine\network\mcpe\protocol\UseItemPacket;
-use pocketmine\network\mcpe\protocol\ContainerClosePacket;
 use pocketmine\network\mcpe\protocol\ModalFormRequestPacket;
 use pocketmine\network\mcpe\protocol\ModalFormResponsePacket;
+
+use pocketmine\network\mcpe\protocol\types\ContainerIds;
 
 use pocketmine\entity\Skin;
 
@@ -101,6 +105,10 @@ use Honey\event\system\SystemErrorEvent;
 
 use Honey\item\MagicItem;
 
+use Honey\games\GameList;
+
+use Honey\games\OneVSOne\Core as OneVSOneCore;
+
 use Honey\plugin\HoneyPluginLoader;
 
 class Main extends PluginBase implements Listener{
@@ -126,6 +134,7 @@ class Main extends PluginBase implements Listener{
 
 	public function onEnable(){
 		$this->getServer()->getPluginManager()->registerEvents($this, $this);
+		$this->getServer()->getPluginManager()->registerEvents(new OneVSOneCore($this),$this);
 		$this->getLogger()->info("§a[はにー]§bプラグインを読み込んでいます...");
 		if(!file_exists($this->getDataFolder())){
 			$this->getLogger()->info("§a[はにー]§bコンフィグファイルを生成しています...");
@@ -388,6 +397,29 @@ class Main extends PluginBase implements Listener{
 					AccountManager::updateAccount($account, "settings", "coordinate", (int)$formdata[1]);
 					AccountManager::updateAccount($account, "settings", "temperature", (int)$formdata[2]);
 					break;
+			}
+		}
+
+		if($pk instanceof InventoryTransactionPacket){
+			$type = $pk->transactionType;
+			if($type === InventoryTransactionPacket::TYPE_NORMAL){
+				$actions = $pk->actions;
+				$item = $actions[0]->newItem;
+				if(ItemProvider::getInstance()->isSelectable($item)){
+					switch($item->getId()){
+						case GameList::ICON_MINECRASH:
+							$event->setCancelled();
+							break;
+						case GameList::ICON_1VS1:
+							$event->setCancelled();
+							OneVSOneCore::getInstance()->entryGame($player);
+							$player->removeAllWindows();
+							break;
+						case GameList::ICON_FFA:
+							$event->setCancelled();
+							break;
+					}
+				}
 			}
 		}
 	}
