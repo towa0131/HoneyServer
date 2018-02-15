@@ -27,6 +27,8 @@ use pocketmine\event\player\PlayerPreLoginEvent;
 use pocketmine\event\player\PlayerInteractEvent;
 use pocketmine\event\player\PlayerMoveEvent;
 
+use pocketmine\event\entity\EntityDamageEvent;
+
 use pocketmine\event\inventory\InventoryTransactionEvent;
 
 use pocketmine\event\block\BlockBreakEvent;
@@ -107,7 +109,7 @@ use Honey\item\MagicItem;
 
 use Honey\games\GameList;
 
-use Honey\games\OneVSOne\Core as OneVSOneCore;
+use Honey\games\SharpFourProtThree\Core as SharpFourProtThreeCore;
 
 use Honey\plugin\HoneyPluginLoader;
 
@@ -134,7 +136,7 @@ class Main extends PluginBase implements Listener{
 
 	public function onEnable(){
 		$this->getServer()->getPluginManager()->registerEvents($this, $this);
-		$this->getServer()->getPluginManager()->registerEvents(new OneVSOneCore($this),$this);
+		$this->getServer()->getPluginManager()->registerEvents(new SharpFourProtThreeCore($this),$this);
 		$this->getLogger()->info("§a[はにー]§bプラグインを読み込んでいます...");
 		if(!file_exists($this->getDataFolder())){
 			$this->getLogger()->info("§a[はにー]§bコンフィグファイルを生成しています...");
@@ -158,7 +160,7 @@ class Main extends PluginBase implements Listener{
 		$this->loginTime = [];
 		$this->status = self::STATUS_WAIT; //ステータス更新
 		$this->waitTime = $this->config->getNested("Game.wait-time");
-		$this->playerModule = new PlayerModule();
+		new PlayerModule();
 		Generator::addGenerator(Honey::class, "honey"); //はにージェネレータを登録
 		//$this->pluginLoader->loadPlugin($this->getServer()->getPluginPath() . "HoneyMusic_v1.0.0");
 	}
@@ -245,13 +247,25 @@ class Main extends PluginBase implements Listener{
 			}
 		}
 		$player->getInventory()->clearAll();
+		$player->teleport($this->getServer()->getLevelByName($this->config->getNested("Level.default-world"))->getSafeSpawn());
 		$player->setGamemode(2);
-		$this->playerModule->sendLobbyItem($player);
+		$player->setHealth(20);
+		$player->setFood(20);
+		PlayerModule::getInstance()->sendLobbyItem($player);
 	}
 
 	public function onBreak(BlockBreakEvent $event){
 		$player = $event->getPlayer();
 		$block = $event->getBlock();
+	}
+
+	public function onDamage(EntityDamageEvent $event){
+		$player = $event->getEntity();
+		$name = $player->getName();
+		$level = $player->getLevel();
+		if($level->getFolderName() == $this->config->getNested("Level.default-world")){
+			$event->setCancelled();
+		}
 	}
 
 	public function onInteract(PlayerInteractEvent $event){
@@ -265,15 +279,20 @@ class Main extends PluginBase implements Listener{
 		$level = $player->getLevel();
 		if($level->getFolderName() == $this->config->getNested("Level.default-world")){
 			switch($item->getId()){
-				case 276:
+				case 276: //ダイヤの剣
 					$inventory = new SelectGameInventory($this, $player);
 					$player->addWindow($inventory);
+					break;
+				case 355: //ベッド(エントリーキャンセル用)
+					if(SharpFourProtThreeCore::getInstance()->isEntryGame($player)){
+						SharpFourProtThreeCore::getInstance()->cancelEntryGame($player);
+					}
 					break;
 			}
 		}
 		/*
 			$form = new AdminSettingsForm();
-			$this->playerModule->sendForm($player, $form, FormIds::FORM_ADMIN_SETTINGS);
+			PlayerModule::getInstance()->sendForm($player, $form, FormIds::FORM_ADMIN_SETTINGS);
 			$account = AccountManager::getAccount($player);
 		*/
 	}
@@ -309,7 +328,7 @@ class Main extends PluginBase implements Listener{
 						$passwd = trim($formdata[1]);
 						if($passwd == null){ //×対策
 							$form = new RegisterForm();
-							$this->playerModule->sendForm($player, $form, FormIds::FORM_REGISTER);
+							PlayerModule::getInstance()->sendForm($player, $form, FormIds::FORM_REGISTER);
 							return;
 						}
 						for($i=0;$i<=$this->config->getNested("Password.hash-count");$i++){ //ストレッチングを行うことによって、パスワードをより安全に保存できるようにする
@@ -326,12 +345,12 @@ class Main extends PluginBase implements Listener{
 							//アカウント作成時に何らかのエラーが発生した
 							$player->sendMessage("§a[はにー]§4エラーが発生しました。");
 							$form = new RegisterForm();
-							$this->playerModule->sendForm($player, $form, FormIds::FORM_REGISTER);
+							PlayerModule::getInstance()->sendForm($player, $form, FormIds::FORM_REGISTER);
 							Utils::callError(ErrNo::ERRNO_004);
 						}
 					}else{ //確認用パスワードがまちがっていた場合
 						$form = new RegisterForm();
-						$this->playerModule->sendForm($player, $form, FormIds::FORM_REGISTER);
+						PlayerModule::getInstance()->sendForm($player, $form, FormIds::FORM_REGISTER);
 					}
 					break;
 				case FormIds::FORM_ADMIN_SETTINGS:
@@ -341,7 +360,7 @@ class Main extends PluginBase implements Listener{
 						case AdminSettingsForm::MENU_MAIN: //ユーザーセレクト画面の表示
 							if(is_numeric($rawdata)){
 								$form = new AdminSettingsForm(0, null, $rawdata);
-								$this->playerModule->sendForm($player, $form, FormIds::FORM_ADMIN_SETTINGS);
+								PlayerModule::getInstance()->sendForm($player, $form, FormIds::FORM_ADMIN_SETTINGS);
 							}
 							break;
 						case AdminSettingsForm::MENU_USER_SELECT: //ユーザーの設定セレクト画面の表示
@@ -350,7 +369,7 @@ class Main extends PluginBase implements Listener{
 								$account = AccountManager::getAccountByName($target);
 								if($account->isOnline()){
 									$form = new AdminSettingsForm(2, $account);
-									$this->playerModule->sendForm($player, $form, FormIds::FORM_ADMIN_SETTINGS);
+									PlayerModule::getInstance()->sendForm($player, $form, FormIds::FORM_ADMIN_SETTINGS);
 								}else{
 									$player->sendMessage("§a[はにー]§4エラー : プレイヤーが見つかりません。");
 								}
@@ -364,7 +383,7 @@ class Main extends PluginBase implements Listener{
 								switch($rawdata){
 									case 0: //アカウント操作画面
 										$form = new AdminSettingsForm(AdminSettingsForm::MENU_USER_SETTINGS, $account);
-										$this->playerModule->sendForm($player, $form, FormIds::FORM_ADMIN_SETTINGS);
+										PlayerModule::getInstance()->sendForm($player, $form, FormIds::FORM_ADMIN_SETTINGS);
 										break;
 									case 1: //XBox垢表示
 										$pk = new ShowProfilePacket();
@@ -410,9 +429,9 @@ class Main extends PluginBase implements Listener{
 						case GameList::ICON_MINECRASH:
 							$event->setCancelled();
 							break;
-						case GameList::ICON_1VS1:
+						case GameList::ICON_SHARP4PROT3:
 							$event->setCancelled();
-							OneVSOneCore::getInstance()->entryGame($player);
+							SharpFourProtThreeCore::getInstance()->entryGame($player);
 							$player->removeAllWindows();
 							break;
 						case GameList::ICON_FFA:
