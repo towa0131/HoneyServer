@@ -20,6 +20,13 @@ use Honey\account\AccountManager;
 
 class PlayerModule{
 
+	/** @var PlayerModule */
+	private static $instance;
+
+	public function __construct(){
+		self::$instance = $this;
+	}
+
 	/**
 	   * @param Player $player
 	   */
@@ -75,5 +82,9 @@ class PlayerModule{
 		$item = Item::get(276, 0, 1);
 		ItemProvider::getInstance()->setUndroppable($item);
 		$player->getInventory()->addItem($item);
+	}
+
+	public static function getInstance(){
+		return self::$instance;
 	}
 }
