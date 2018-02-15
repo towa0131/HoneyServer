@@ -41,6 +41,26 @@ class ItemProvider{
 		return false;
 	}
 
+	public function setSelectable(Item $item){
+		if($item->hasCompoundTag()){
+			$tag = $item->getNamedTag();
+		}else{
+			$tag = new CompoundTag("", []);
+		}
+		$tag->type = new StringTag("type","Selectable");
+		$item->setNamedTag($tag);
+	}
+
+	public function isSelectable(Item $item){
+		$tag = $item->getNamedTag();
+		if(isset($tag->type)){
+			if($tag->type == "Selectable"){
+				return true;
+			}
+		}
+		return false;
+	}
+
 	public static function getInstance(){
 		return self::$instance;
 	}
