@@ -35,6 +35,13 @@ class Account{
 	}
 
 	/**
+	   * @param string $lang
+	   */
+	public function setLanguage(string $lang){
+		AccountManager::updateAccount($this, "playerdata", "language", $lang);
+	}
+
+	/**
 	   * @return string | プレイヤーのXuid
 	   */
 	public function getXuid(){
@@ -60,6 +67,20 @@ class Account{
 	   */
 	public function getHoney(){
 		return $this->data["honey"];
+	}
+
+	/**
+	   * @param int $honey
+	   */
+	public function setHoney(int $honey){
+		AccountManager::updateAccount($this, "playerdata", "honey", $this->data["honey"]);
+	}
+
+	/**
+	   * @param int $honey
+	   */
+	public function addHoney(int $honey){
+		AccountManager::updateAccount($this, "playerdata", "honey", $honey + $this->data["honey"]);
 	}
 
 	/**
