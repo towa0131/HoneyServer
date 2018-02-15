@@ -28,6 +28,8 @@ use pocketmine\network\mcpe\protocol\types\WindowTypes;
 
 use Honey\games\GameList;
 
+use Honey\ItemProvider;
+
 class SelectGameInventory extends BaseInventory{
 
 	private $owner;
@@ -88,6 +90,7 @@ class SelectGameInventory extends BaseInventory{
 			$item = Item::get($id, 0, 1);
 			$gameNames = GameList::getGameNameList();
 			$item->setCustomName($gameNames[$slot]);
+			ItemProvider::getInstance()->setSelectable($item);
 			$this->setItem($slot, $item);
 			$slot++;
 		}
