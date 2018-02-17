@@ -110,7 +110,7 @@ use Honey\item\MagicItem;
 use Honey\games\GameList;
 
 use Honey\games\SharpFourProtThree\Core as SharpFourProtThreeCore;
-use Honey\games\SharpTwoProtTwo\Core as SharpTwoProtTwo;
+use Honey\games\SharpTwoProtTwo\Core as SharpTwoProtTwoCore;
 
 use Honey\plugin\HoneyPluginLoader;
 
@@ -442,11 +442,17 @@ class Main extends PluginBase implements Listener{
 							break;
 						case GameList::ICON_SHARP4PROT3:
 							$event->setCancelled();
+							if(SharpFourProtThreeCore::getInstance()->isEntryGame($player) || SharpTwoProtTwoCore::getInstance()->isEntryGame($player)){
+								return;
+							}
 							SharpFourProtThreeCore::getInstance()->entryGame($player);
 							$player->removeAllWindows();
 							break;
 						case GameList::ICON_SHARP2PROT2:
 							$event->setCancelled();
+							if(SharpFourProtThreeCore::getInstance()->isEntryGame($player) || SharpTwoProtTwoCore::getInstance()->isEntryGame($player)){
+								return;
+							}
 							SharpTwoProtTwoCore::getInstance()->entryGame($player);
 							$player->removeAllWindows();
 							break;
