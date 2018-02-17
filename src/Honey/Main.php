@@ -110,6 +110,7 @@ use Honey\item\MagicItem;
 use Honey\games\GameList;
 
 use Honey\games\SharpFourProtThree\Core as SharpFourProtThreeCore;
+use Honey\games\SharpTwoProtTwo\Core as SharpTwoProtTwo;
 
 use Honey\plugin\HoneyPluginLoader;
 
@@ -137,6 +138,7 @@ class Main extends PluginBase implements Listener{
 	public function onEnable(){
 		$this->getServer()->getPluginManager()->registerEvents($this, $this);
 		$this->getServer()->getPluginManager()->registerEvents(new SharpFourProtThreeCore($this),$this);
+		$this->getServer()->getPluginManager()->registerEvents(new SharpTwoProtTwoCore($this),$this);
 		$this->getLogger()->info("§a[はにー]§bプラグインを読み込んでいます...");
 		if(!file_exists($this->getDataFolder())){
 			$this->getLogger()->info("§a[はにー]§bコンフィグファイルを生成しています...");
@@ -257,6 +259,9 @@ class Main extends PluginBase implements Listener{
 	public function onBreak(BlockBreakEvent $event){
 		$player = $event->getPlayer();
 		$block = $event->getBlock();
+		if(!$player->isOp()){
+			$event->setCancelled();
+		}
 	}
 
 	public function onDamage(EntityDamageEvent $event){
@@ -264,6 +269,9 @@ class Main extends PluginBase implements Listener{
 		$name = $player->getName();
 		$level = $player->getLevel();
 		if($level->getFolderName() == $this->config->getNested("Level.default-world")){
+			$event->setCancelled();
+		}
+		if($level->getFolderName() == $this->config->getNested("Level.wait-world")){
 			$event->setCancelled();
 		}
 	}
@@ -286,6 +294,9 @@ class Main extends PluginBase implements Listener{
 				case 355: //ベッド(エントリーキャンセル用)
 					if(SharpFourProtThreeCore::getInstance()->isEntryGame($player)){
 						SharpFourProtThreeCore::getInstance()->cancelEntryGame($player);
+					}
+					if(SharpTwoProtTwoCore::getInstance()->isEntryGame($player)){
+						SharpTwoProtTwoCore::getInstance()->cancelEntryGame($player);
 					}
 					break;
 			}
@@ -434,6 +445,11 @@ class Main extends PluginBase implements Listener{
 							SharpFourProtThreeCore::getInstance()->entryGame($player);
 							$player->removeAllWindows();
 							break;
+						case GameList::ICON_SHARP2PROT2:
+							$event->setCancelled();
+							SharpTwoProtTwoCore::getInstance()->entryGame($player);
+							$player->removeAllWindows();
+							break;
 						case GameList::ICON_FFA:
 							$event->setCancelled();
 							break;
@@ -444,7 +460,13 @@ class Main extends PluginBase implements Listener{
 	}
 
 	public function onDropItem(PlayerDropItemEvent $event){
+		$player = $event->getPlayer();
 		$item = $event->getItem();
+		$name = $player->getName();
+		$level = $player->getLevel();
+		if($level->getFolderName() == $this->config->getNested("Level.default-world")){
+			$event->setCancelled();
+		}
 		if(ItemProvider::getInstance()->isUndroppable($item)){
 			$event->setCancelled();
 		}
