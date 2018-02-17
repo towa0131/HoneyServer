@@ -30,10 +30,16 @@ class TeleportToLobbyTask extends PluginTask{
 
 	public function onRun(int $currentTick){
 		if(Server::getInstance()->getPlayer($this->player->getName()) !== null){
+			$level = $this->player->getLevel();
+			if(strpos($level->getFolderName(), "PvPMap") !== false){
+				Server::getInstance()->unloadLevel($level);
+			}
 			$this->player->teleport($this->position);
 			$this->player->setHealth(20);
 			$this->player->getInventory()->clearAll();
+			$this->player->getCursorInventory()->clearAll();
 			$this->player->removeAllEffects();
+			$this->player->setSpawn(Server::getInstance()->getLevelByName(Main::getInstance()->config->getNested("Level.default-world"))->getSafeSpawn());
 			PlayerModule::getInstance()->sendLobbyItem($this->player);
 		}
 	}

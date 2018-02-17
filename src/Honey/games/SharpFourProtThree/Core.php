@@ -8,6 +8,8 @@ use pocketmine\event\Listener;
 
 use pocketmine\event\player\PlayerDeathEvent;
 use pocketmine\event\player\PlayerQuitEvent;
+use pocketmine\event\player\PlayerRespawnEvent;
+
 
 use pocketmine\level\Position;
 
@@ -62,6 +64,19 @@ class Core implements Listener{
 		return false;
 	}
 
+	public function onRespawn(PlayerRespawnEvent $event){
+		$player = $event->getPlayer();
+		$level = $player->getLevel();
+		if(strpos($level->getFolderName(), "PvPMap") !== false){
+			$waitLevel = Server::getInstance()->getLevelByName(Main::getInstance()->config->getNested("Level.wait-world"));
+			$event->setRespawnPosition($waitLevel->getSafeSpawn());
+			$player->teleport($waitLevel->getSafeSpawn());
+		}else{
+			$event->setRespawnPosition(Server::getInstance()->getLevelByName(Main::getInstance()->config->getNested("Level.default-world"))->getSafeSpawn());
+			$player->teleport(Server::getInstance()->getLevelByName(Main::getInstance()->config->getNested("Level.default-world"))->getSafeSpawn());
+		}
+	}
+
 	public function onQuit(PlayerQuitEvent $event){
 		$player = $event->getPlayer();
 		if(GameIdManager::getInstance()->hasPlayer($player)){
@@ -82,16 +97,26 @@ class Core implements Listener{
 	public function startGame(Player $playerA, Player $playerB){
 		$playerA->sendMessage("§a[はにー]§bまもなく試合が始まります。");
 		$playerB->sendMessage("§a[はにー]§bまもなく試合が始まります。");
+		if(!Server::getInstance()->isLevelLoaded(Main::getInstance()->config->getNested("Level.wait-world"))){
+			Server::getInstance()->loadLevel(Main::getInstance()->config->getNested("Level.wait-world"));
+		}
+		$level = Server::getInstance()->getLevelByName(Main::getInstance()->config->getNested("Level.wait-world"));
+		$playerA->teleport($level->getSafeSpawn());
+		$playerB->teleport($level->getSafeSpawn());
 		$playerA->getInventory()->clearAll();
 		$playerB->getInventory()->clearAll();
-		//のちのち変更予定
-		if(Server::getInstance()->isLevelLoaded("1vs1")){
-			$level = Server::getInstance()->getLevelByName("1vs1");
+		GameIdManager::getInstance()->addNewGameId(0, $playerA, $playerB);
+		$gameId = GameIdManager::getInstance()->getGameIdByPlayer($playerA);
+		var_dump($gameId);
+		/*if(Server::getInstance()->isLevelLoaded("PvPMap-" . (string)$gameId)){
+			$level = Server::getInstance()->getLevelByName("PvPMap-" . (string)$gameId);
 			$level->setAutoSave(false);
 			Server::getInstance()->unloadLevel($level);
-		}
-		Server::getInstance()->loadLevel("1vs1");
-		$task = new TeleportToPvPWorldTask(Main::getInstance(), $this, $playerA, $playerB, new Position(289.9, 8, 249.9, Server::getInstance()->getLevelByName("1vs1")), new Position(290.0, 8, 163.9, Server::getInstance()->getLevelByName("1vs1")));
+		}*/
+		Server::getInstance()->loadLevel("PvPMap-" . (string)$gameId);
+		$level = Server::getInstance()->getLevelByName("PvPMap-" . (string)$gameId);
+		$level->setAutoSave(false);
+		$task = new TeleportToPvPWorldTask(Main::getInstance(), $this, $playerA, $playerB, new Position(289.9, 9, 249.9, $level), new Position(290.0, 9, 163.9, $level));
 		Server::getInstance()->getScheduler()->scheduleDelayedTask($task, 20 * 5);
 	}
 
@@ -155,22 +180,33 @@ class Core implements Listener{
 		$enchant = Enchantment::getEnchantment(9);
 		$enchant->setLevel(4);
 		$item->addEnchantment($enchant);
+		$enchant = Enchantment::getEnchantment(13);
+		$enchant->setLevel(2);
+		$item->addEnchantment($enchant);
+		$enchant = Enchantment::getEnchantment(17);
+		$enchant->setLevel(3);
+		$item->addEnchantment($enchant);
 		$player->getInventory()->addItem($item);
 		//エンダーパール
 		$item = Item::get(368, 0, 16);
 		$player->getInventory()->addItem($item);
-		//ステーキ
-		$item = Item::get(364, 0, 64);
-		$player->getInventory()->addItem($item);
-		//攻撃力上昇のポーション
-		$item = Item::get(373, 15, 1);
+		//金のニンジン
+		$item = Item::get(396, 0, 64);
 		$player->getInventory()->addItem($item);
 		//移動速度上昇のポーション
-		$item = Item::get(373, 32, 1);
+		$item = Item::get(373, 16, 1);
+		$player->getInventory()->addItem($item);
+		//耐火のポーション
+		$item = Item::get(373, 13, 1);
 		$player->getInventory()->addItem($item);
 		//スプラッシュ回復のポーション
-		for($i=0;$i<31;$i++){
-			$item = Item::get(438, 21, 1);
+		for($i=0;$i<28;$i++){
+			$item = Item::get(438, 22, 1);
+			$player->getInventory()->addItem($item);
+		}
+		//移動速度上昇のポーション
+		for($i=0;$i<3;$i++){
+			$item = Item::get(373, 16, 1);
 			$player->getInventory()->addItem($item);
 		}
 		//装備関連

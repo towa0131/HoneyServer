@@ -6,9 +6,9 @@ use pocketmine\Player;
 
 class GameIdManager{
 
-	/** @var EntryManager */
+	/** @var EntryManager $instance */
 	private static $instance;
-	/** @var mixed[] */
+	/** @var mixed[] $gameIds */
 	private $gameIds = [];
 
 	public function __construct(){
@@ -19,13 +19,21 @@ class GameIdManager{
 		$this->gameIds[$id] = [$taskId, $playerA->getName(), $playerB->getName()];
 	}
 
-	public function addNewGameId(int $taskId, Player $playerA, Player $playerB){
-		$this->gameIds[count($this->gameIds) / 2] = [$taskId, $playerA->getName(), $playerB->getName()];
+	public function addNewGameId(int $taskId = 0, Player $playerA, Player $playerB){
+		for($i=0;$i<10;$i++){
+			if(!isset($this->gameIds[$i])){
+				$this->gameIds[$i] = [$taskId, $playerA->getName(), $playerB->getName()];
+				echo "new";
+				var_dump($this->gameIds);
+				return true;
+			}
+		}
+		return false;
 	}
 
 	public function removeGameId(int $id){
 		if(isset($this->gameIds[$id])){
-			$this->gameIds[$id] = [];
+			unset($this->gameIds[$id]);
 			return true;
 		}
 		return false;
@@ -46,32 +54,34 @@ class GameIdManager{
 		return false;
 	}
 
+	public function setTaskId(int $id, int $taskId){
+		if(isset($this->gameIds[$id])){
+			$this->gameIds[$id][0] = $taskId;
+			return true;
+		}
+		return false;
+	}
+
 	public function getPlayersByGameId(int $id){
 		return [$this->gameIds[$id][1], $this->gameIds[$id][2]];
 	}
 
 	public function getGameIdByPlayer(Player $player){
-		$i = 0;
-		foreach($this->gameIds as $id){
-			foreach($id as $data){
-				if($player->getName() === $data){
-					return $i;
-				}
+		foreach($this->gameIds as $key => $id){
+			if(($id[1] == $player->getName()) || ($id[2] == $player->getName())){
+				return $key;
 			}
-			++$i;
 		}
 		return null;
 	}
 
 	public function getTaskIdByPlayer(Player $player){
-		$i = 0;
 		foreach($this->gameIds as $id){
 			foreach($id as $data){
-				if($player->getName() === $data){
+				if($player->getName() == $data){
 					return $id[0];
 				}
 			}
-			++$i;
 		}
 		return null;
 	}

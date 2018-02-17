@@ -42,6 +42,8 @@ class TeleportToPvPWorldTask extends PluginTask{
 		$this->playerB->teleport($this->positionB);
 		$this->playerA->getInventory()->clearAll();
 		$this->playerB->getInventory()->clearAll();
+		$this->playerA->getCursorInventory()->clearAll();
+		$this->playerB->getCursorInventory()->clearAll();
 		$this->playerA->setHealth(20);
 		$this->playerB->setHealth(20);
 		$this->playerA->setFood(20);
@@ -50,6 +52,7 @@ class TeleportToPvPWorldTask extends PluginTask{
 		$this->core->sendItems($this->playerB);
 		$task = new GameTask(Main::getInstance(), $this->playerA, $this->playerB);
 		Server::getInstance()->getScheduler()->scheduleRepeatingTask($task, 1*20);
-		GameIdManager::getInstance()->addNewGameId($task->getTaskId(), $this->playerA, $this->playerB);
+		$gameId = GameIdManager::getInstance()->getGameIdByPlayer($this->playerA);
+		GameIdManager::getInstance()->setTaskId($gameId, $task->getTaskId());
 	}
 }
