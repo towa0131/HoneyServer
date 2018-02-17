@@ -23,8 +23,6 @@ class GameIdManager{
 		for($i=0;$i<10;$i++){
 			if(!isset($this->gameIds[$i])){
 				$this->gameIds[$i] = [$taskId, $playerA->getName(), $playerB->getName()];
-				echo "new";
-				var_dump($this->gameIds);
 				return true;
 			}
 		}

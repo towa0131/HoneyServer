@@ -107,12 +107,7 @@ class Core implements Listener{
 		$playerB->getInventory()->clearAll();
 		GameIdManager::getInstance()->addNewGameId(0, $playerA, $playerB);
 		$gameId = GameIdManager::getInstance()->getGameIdByPlayer($playerA);
-		var_dump($gameId);
-		/*if(Server::getInstance()->isLevelLoaded("PvPMap-" . (string)$gameId)){
-			$level = Server::getInstance()->getLevelByName("PvPMap-" . (string)$gameId);
-			$level->setAutoSave(false);
-			Server::getInstance()->unloadLevel($level);
-		}*/
+
 		Server::getInstance()->loadLevel("PvPMap-" . (string)$gameId);
 		$level = Server::getInstance()->getLevelByName("PvPMap-" . (string)$gameId);
 		$level->setAutoSave(false);
