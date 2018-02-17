@@ -35,7 +35,7 @@ class GameTask extends PluginTask{
 		}else{
 			$time = $minute . ":" . $second2;
 		}
-		$message = "                         §a----- Sharp4Prot3 -----" .
+		$message = "                         §a----- Sharp2Prot2 -----" .
 				PHP_EOL .
 				"                         §bTarget §f: " . $playerBName . 
 				PHP_EOL .
@@ -45,7 +45,7 @@ class GameTask extends PluginTask{
 				PHP_EOL .
 				"                         §a-----------------------";
 		$this->playerA->sendPopup($message);
-		$message = "                         §a----- Sharp4Prot3 -----" .
+		$message = "                         §a----- Sharp4P2rot2 -----" .
 				PHP_EOL .
 				"                         §bTarget §f: " . $playerAName . 
 				PHP_EOL .

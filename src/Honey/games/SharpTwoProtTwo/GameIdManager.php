@@ -1,6 +1,6 @@
 <?php
 
-namespace Honey\games\SharpFourProtThree;
+namespace Honey\games\SharpTwoProtTwo;
 
 use pocketmine\Player;
 

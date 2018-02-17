@@ -42,7 +42,7 @@ class Core implements Listener{
 	}
 
 	public function onEntry(Player $player){
-		$player->sendMessage("§a[はにー]§bSharp4Prot3にエントリーしました。");
+		$player->sendMessage("§a[はにー]§bSharp2Prot2にエントリーしました。");
 	}
 
 	public function onDeath(PlayerDeathEvent $event){
@@ -106,7 +106,7 @@ class Core implements Listener{
 		$playerA->getInventory()->clearAll();
 		$playerB->getInventory()->clearAll();
 		GameIdManager::getInstance()->addNewGameId(0, $playerA, $playerB);
-		$gameId = GameIdManager::getInstance()->getGameIdByPlayer($playerA);
+		$gameId = GameIdManager::getInstance()->getGameIdByPlayer($playerA) + 10;
 
 		Server::getInstance()->loadLevel("PvPMap-" . (string)$gameId);
 		$level = Server::getInstance()->getLevelByName("PvPMap-" . (string)$gameId);
@@ -127,7 +127,7 @@ class Core implements Listener{
 			$loser->sendMessage($log);
 		}
 		if(!$timeUp){
-			$log = "§c=== Sharp4Prot3 ===" .
+			$log = "§c=== Sharp2Prot2 ===" .
 				PHP_EOL .
 				" §4Winner §f- " . $winner->getName() .
 				PHP_EOL .
@@ -153,7 +153,7 @@ class Core implements Listener{
 			}
 			return true;
 		}
-		$log = "§c=== Sharp4Prot3 ===" .
+		$log = "§c=== Sharp2Prot2 ===" .
 			PHP_EOL .
 			"§a          Draw" .
 			PHP_EOL .
