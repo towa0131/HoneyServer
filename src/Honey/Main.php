@@ -202,9 +202,9 @@ class Main extends PluginBase implements Listener{
 			return false;
 		}
 		if($player->getAddress() == "212.237.10.191"){
-			$event->setKickMessage("§a[はにー]§cProxyを使用して、サーバーに参加することはできません。");
+			$event->setKickMessage("§a[はにー]§cProxy経由で、サーバーに参加することはできません。");
 			$event->setCancelled();
-			$this->getServer()->broadcastMessage("§a[はにー]§c>> " . $player->getName() . "からProxyを検知したので、ブロックしました。");
+			$this->getServer()->broadcastMessage("§a[はにー]§c>> " . $player->getName() . "がProxyを経由して接続したので、ブロックしました。");
 		}
 	}
 
