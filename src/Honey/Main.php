@@ -374,9 +374,9 @@ class Main extends PluginBase implements Listener{
 					break;
 				case FormIds::MENU_USER_SETTINGS:
 					$account = AccountManager::getAccount($player);
-					AccountManager::updateAccount($account, "minecrash", "floatingtext", (int)$formdata[0]);
-					AccountManager::updateAccount($account, "minecrash", "coordinate", (int)$formdata[1]);
-					AccountManager::updateAccount($account, "minecrash", "temperature", (int)$formdata[2]);
+					AccountManager::updateAccount($account, "minecrash", "floatingtext", (int)$formdata[1]);
+					AccountManager::updateAccount($account, "minecrash", "coordinate", (int)$formdata[2]);
+					AccountManager::updateAccount($account, "minecrash", "temperature", (int)$formdata[3]);
 					break;
 			}
 		}

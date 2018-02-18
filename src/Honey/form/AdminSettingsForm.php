@@ -170,13 +170,13 @@ class AdminSettingsForm implements Form{
 				$ownerAccount = AccountManager::getAccount($player);
 				$history = $ownerAccount->getFormHistory(0);
 				$account = $history->getAccount();
-				if(is_numeric($formJson[3])){ //×が押されなかったらアップデート
+				if(is_numeric($formJson[4])){ //×が押されなかったらアップデート
 					AccountManager::updateAccount($account, "playerdata", "honey", $formJson[1]);
 					AccountManager::updateAccount($account, "playerdata", "language", $langList[(int)$formJson[2]]);
-					AccountManager::updateAccount($account, "minecrash", "chunk", $viewDistance[(int)$formJson[3]]);
-					AccountManager::updateAccount($account, "minecrash", "floatingtext", (int)$formJson[4]);
-					AccountManager::updateAccount($account, "minecrash", "coordinate", (int)$formJson[5]);
-					AccountManager::updateAccount($account, "minecrash", "temperature", (int)$formJson[6]);
+					AccountManager::updateAccount($account, "minecrash", "chunk", $viewDistance[(int)$formJson[4]]);
+					AccountManager::updateAccount($account, "minecrash", "floatingtext", (int)$formJson[5]);
+					AccountManager::updateAccount($account, "minecrash", "coordinate", (int)$formJson[6]);
+					AccountManager::updateAccount($account, "minecrash", "temperature", (int)$formJson[7]);
 				}
 				break;
 		}
