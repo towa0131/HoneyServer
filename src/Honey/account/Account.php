@@ -216,7 +216,7 @@ class Account{
 				}
 			}
 		}
-		$data = "SELECT * FROM settings where xuid = '" . $this->xuid . "'";
+		$data = "SELECT * FROM minecrash where xuid = '" . $this->xuid . "'";
 		if($result = $db->query($data)){
 			while($row = $result->fetch_assoc()){
 				if($this->xuid == $row["xuid"]){

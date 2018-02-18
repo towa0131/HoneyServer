@@ -133,7 +133,7 @@ class AccountManager{
 		 if(!$db->query($query)){
 			return false;
 		}
-		$query = "INSERT INTO settings(xuid) VALUES ('" . $xuid . "')"; //DB側であれこれするのでXUIDしか必要ない
+		$query = "INSERT INTO minecrash(xuid) VALUES ('" . $xuid . "')"; //DB側であれこれするのでXUIDしか必要ない
 		 if(!$db->query($query)){
 			return false;
 		}

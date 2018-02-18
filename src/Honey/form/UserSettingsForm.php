@@ -27,6 +27,7 @@ class UserSettingsForm implements Form{
 		$account = $this->account;
 		$form = new CustomForm("はにー鯖");
 		$form->addIconUrl("https://honey-mc.net/apple-touch-icon.jpg");
+		$form->addElement(new Label("=-=-= MineCrash =-=-="));
 		$form->addElement(new Toggle("採掘時の浮遊文字の表示", $account->isShowFloating()));
 		$form->addElement(new Toggle("座標の表示", $account->isShowCoordinate()));
 		$form->addElement(new Toggle("気温/天気の表示", $account->isShowTemperature()));

@@ -299,13 +299,15 @@ class Main extends PluginBase implements Listener{
 						SharpTwoProtTwoCore::getInstance()->cancelEntryGame($player);
 					}
 					break;
+				case 369:
+					if($player->isOp()){
+						$form = new AdminSettingsForm();
+						PlayerModule::getInstance()->sendForm($player, $form, FormIds::FORM_ADMIN_SETTINGS);
+						$account = AccountManager::getAccount($player);
+					}
+					break;
 			}
 		}
-		/*
-			$form = new AdminSettingsForm();
-			PlayerModule::getInstance()->sendForm($player, $form, FormIds::FORM_ADMIN_SETTINGS);
-			$account = AccountManager::getAccount($player);
-		*/
 	}
 
 	public function onReceive(DataPacketReceiveEvent $event){
@@ -367,72 +369,21 @@ class Main extends PluginBase implements Listener{
 				case FormIds::FORM_ADMIN_SETTINGS:
 					$account = AccountManager::getAccount($player);
 					$history = $account->getFormHistory(0);
-					switch($history->case){
-						case AdminSettingsForm::MENU_MAIN: //ユーザーセレクト画面の表示
-							if(is_numeric($rawdata)){
-								$form = new AdminSettingsForm(0, null, $rawdata);
-								PlayerModule::getInstance()->sendForm($player, $form, FormIds::FORM_ADMIN_SETTINGS);
-							}
-							break;
-						case AdminSettingsForm::MENU_USER_SELECT: //ユーザーの設定セレクト画面の表示
-							if(is_numeric($rawdata)){
-								$target = $history->buttons[(int)$rawdata];
-								$account = AccountManager::getAccountByName($target);
-								if($account->isOnline()){
-									$form = new AdminSettingsForm(2, $account);
-									PlayerModule::getInstance()->sendForm($player, $form, FormIds::FORM_ADMIN_SETTINGS);
-								}else{
-									$player->sendMessage("§a[はにー]§4エラー : プレイヤーが見つかりません。");
-								}
-							}
-							break;
-						case AdminSettingsForm::MENU_USER_SETTINGS_SELECT: //ユーザー選択画面の表示
-							if(is_numeric($rawdata)){
-								$ownerAccount = AccountManager::getAccount($player);
-								$history = $ownerAccount->getFormHistory(0);
-								$account = $history->account;
-								switch($rawdata){
-									case 0: //アカウント操作画面
-										$form = new AdminSettingsForm(AdminSettingsForm::MENU_USER_SETTINGS, $account);
-										PlayerModule::getInstance()->sendForm($player, $form, FormIds::FORM_ADMIN_SETTINGS);
-										break;
-									case 1: //XBox垢表示
-										$pk = new ShowProfilePacket();
-										$pk->xuid = $account->getXuid();
-										$player->dataPacket($pk);
-										break;
-								}
-							}
-							break;
-						case AdminSettingsForm::MENU_USER_SETTINGS: //アカウント操作の更新
-							$langList = ["jpn","eng"];
-							$viewDistance = ["3", "6", "9", "12", "15", "18"];
-							$ownerAccount = AccountManager::getAccount($player);
-							$history = $ownerAccount->getFormHistory(0);
-							$account = $history->account;
-							if(is_numeric($formdata[3])){ //×が押されなかったらアップデート
-								AccountManager::updateAccount($account, "playerdata", "honey", $formdata[1]);
-								AccountManager::updateAccount($account, "playerdata", "language", $langList[(int)$formdata[2]]);
-								AccountManager::updateAccount($account, "settings", "chunk", $viewDistance[(int)$formdata[3]]);
-								AccountManager::updateAccount($account, "settings", "floatingtext", (int)$formdata[4]);
-								AccountManager::updateAccount($account, "settings", "coordinate", (int)$formdata[5]);
-								AccountManager::updateAccount($account, "settings", "temperature", (int)$formdata[6]);
-							}
-							break;
-					}
+					$form = new AdminSettingsForm();
+					$form->onSendForm($rawdata, $formid, $player, $history);
 					break;
 				case FormIds::MENU_USER_SETTINGS:
 					$account = AccountManager::getAccount($player);
-					AccountManager::updateAccount($account, "settings", "floatingtext", (int)$formdata[0]);
-					AccountManager::updateAccount($account, "settings", "coordinate", (int)$formdata[1]);
-					AccountManager::updateAccount($account, "settings", "temperature", (int)$formdata[2]);
+					AccountManager::updateAccount($account, "minecrash", "floatingtext", (int)$formdata[0]);
+					AccountManager::updateAccount($account, "minecrash", "coordinate", (int)$formdata[1]);
+					AccountManager::updateAccount($account, "minecrash", "temperature", (int)$formdata[2]);
 					break;
 			}
 		}
 
 		if($pk instanceof InventoryTransactionPacket){
 			$type = $pk->transactionType;
-			if($type === InventoryTransactionPacket::TYPE_NORMAL){
+			if($type === InventoryTransactionPacket::TYPE_NORMAL || $type === InventoryTransactionPacket::TYPE_MISMATCH){
 				$actions = $pk->actions;
 				$item = $actions[0]->newItem;
 				if(ItemProvider::getInstance()->isSelectable($item)){

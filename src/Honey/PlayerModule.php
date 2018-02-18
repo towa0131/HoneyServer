@@ -16,6 +16,8 @@ use pocketmine\nbt\tag\StringTag;
 use pocketmine\item\Item;
 use pocketmine\item\WrittenBook;
 
+use pocketmine\item\enchantment\Enchantment;
+
 use Honey\account\AccountManager;
 
 class PlayerModule{
@@ -82,6 +84,15 @@ class PlayerModule{
 		$item = Item::get(276, 0, 1);
 		ItemProvider::getInstance()->setUndroppable($item);
 		$player->getInventory()->addItem($item);
+		if($player->isOP()){
+			$item = Item::get(369, 0, 1);
+			$enchant = Enchantment::getEnchantment(9);
+			$enchant->setLevel(1);
+			$item->addEnchantment($enchant);
+			$item->setCustomName("MasterWand");
+			ItemProvider::getInstance()->setUndroppable($item);
+			$player->getInventory()->addItem($item);
+		}
 	}
 
 	public static function getInstance(){
