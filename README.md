@@ -3,7 +3,7 @@ __Open source [HoneyServer](https://honey-mc.net)'s plugin for Minecraft: Bedroc
 
 ### Info
 
-| INFO |
+| Info |  |
 |:---|:---:|
 | MCBE Version | 1.2.10 |
 | Version | 1.0.0 |
