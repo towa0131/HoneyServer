@@ -1,9 +1,9 @@
 # HoneyServer
-__ Open source [HoneyServer](https://honey-mc.net)'s plugin for Minecraft: Bedrock Edition. __
+__Open source [HoneyServer](https://honey-mc.net)'s plugin for Minecraft: Bedrock Edition.__
 
 ### Info
 
-| t1 | t2 |
+| INFO |
 |:---|:---:|
 | MCBE Version | 1.2.10 |
 | Version | 1.0.0 |
