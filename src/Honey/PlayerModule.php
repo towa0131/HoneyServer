@@ -92,6 +92,10 @@ class PlayerModule{
 			$item->setCustomName("MasterWand");
 			ItemProvider::getInstance()->setUndroppable($item);
 			$player->getInventory()->addItem($item);
+			$item = Item::get(54, 0, 1);
+			$item->setCustomName("ToyBox");
+			ItemProvider::getInstance()->setUndroppable($item);
+			$player->getInventory()->addItem($item);
 		}
 	}
 
