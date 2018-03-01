@@ -26,7 +26,7 @@ class Proxy{
 	}
 
 	protected function getIpData(){
-		$result = json_encode(file_get_contents("http://legacy.iphub.info/api.php?ip=" . $this->getIp() .  "&showtype=4"), true);
+		$result = json_decode(file_get_contents("http://legacy.iphub.info/api.php?ip=" . $this->getIp() .  "&showtype=4"), true);
 		return $result;
 	}
 
