@@ -16,6 +16,8 @@ use pocketmine\nbt\tag\StringTag;
 use pocketmine\item\Item;
 use pocketmine\item\WrittenBook;
 
+use pocketmine\block\Block;
+
 use pocketmine\item\enchantment\Enchantment;
 
 use Honey\account\AccountManager;
@@ -90,10 +92,6 @@ class PlayerModule{
 			$enchant->setLevel(1);
 			$item->addEnchantment($enchant);
 			$item->setCustomName("MasterWand");
-			ItemProvider::getInstance()->setUndroppable($item);
-			$player->getInventory()->addItem($item);
-			$item = Item::get(54, 0, 1);
-			$item->setCustomName("ToyBox");
 			ItemProvider::getInstance()->setUndroppable($item);
 			$player->getInventory()->addItem($item);
 		}

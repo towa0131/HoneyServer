@@ -6,6 +6,8 @@ use pocketmine\Player;
 
 use pocketmine\item\Item;
 
+use pocketmine\block\BlockFactory;
+
 use pocketmine\level\Level;
 
 use pocketmine\math\Vector3;
@@ -54,8 +56,7 @@ class SelectGameInventory extends BaseInventory{
 		$pk->x = $x;
 		$pk->y = $y;
 		$pk->z = $z;
-		$pk->blockId = 54;
-		$pk->blockData = 0;
+		$pk->blockRuntimeId = BlockFactory::toStaticRuntimeId(54, 0);
 		$pk->flags = UpdateBlockPacket::FLAG_NONE;
 		$who->dataPacket($pk);
 
@@ -104,8 +105,8 @@ class SelectGameInventory extends BaseInventory{
 		$pk->x = $this->oldBlock->x;
 		$pk->y = $this->oldBlock->y;
 		$pk->z = $this->oldBlock->z;
-		$pk->blockId = $this->oldBlock->getID();
-		$pk->blockData = $this->oldBlock->getDamage();
+		$pk->blockRuntimeId = BlockFactory::toStaticRuntimeId($this->oldBlock->getID(), $this->oldBlock->getDamage());
+		$pk->flags = UpdateBlockPacket::FLAG_NONE;
 		$who->dataPacket($pk);
 	}
 
