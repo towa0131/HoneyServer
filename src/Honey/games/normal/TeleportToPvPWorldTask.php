@@ -1,6 +1,6 @@
 <?php
 
-namespace Honey\games\SharpTwoProtTwo;
+namespace Honey\games\normal;
 
 use pocketmine\plugin\PluginBase;
 
@@ -12,6 +12,8 @@ use pocketmine\Server;
 use pocketmine\level\Position;
 
 use Honey\Main;
+
+use Honey\games\utils\GameIdManager;
 
 class TeleportToPvPWorldTask extends PluginTask{
 
@@ -29,7 +31,7 @@ class TeleportToPvPWorldTask extends PluginTask{
 	protected $positionB;
 
 	public function __construct(PluginBase $owner, Core $core, Player $playerA, Player $playerB, Position $positionA, Position $positionB){
-		$this->owner = $owner;
+		parent::__construct($owner);
 		$this->core = $core;
 		$this->playerA = $playerA;
 		$this->playerB = $playerB;
@@ -50,9 +52,9 @@ class TeleportToPvPWorldTask extends PluginTask{
 		$this->playerB->setFood(20);
 		$this->core->sendItems($this->playerA);
 		$this->core->sendItems($this->playerB);
-		$task = new GameTask(Main::getInstance(), $this->playerA, $this->playerB);
+		$task = new GameTask($this->owner, $this->playerA, $this->playerB);
 		Server::getInstance()->getScheduler()->scheduleRepeatingTask($task, 1*20);
-		$gameId = GameIdManager::getInstance()->getGameIdByPlayer($this->playerA);
-		GameIdManager::getInstance()->setTaskId($gameId, $task->getTaskId());
+		$gameId = GameIdManager::getGameIdByName($this->playerA->getName());
+		GameIdManager::setTaskId($gameId, $task->getTaskId());
 	}
 }

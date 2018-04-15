@@ -61,6 +61,7 @@ use pocketmine\network\mcpe\protocol\ModalFormResponsePacket;
 use pocketmine\network\mcpe\protocol\types\ContainerIds;
 
 use pocketmine\entity\Skin;
+use pocketmine\entity\Item as ItemEntity;
 
 use pocketmine\utils\Config;
 
@@ -108,6 +109,7 @@ use Honey\event\system\SystemErrorEvent;
 use Honey\item\MagicItem;
 
 use Honey\games\GameList;
+use Honey\games\GameManager;
 
 use Honey\games\SharpFourProtThree\Core as SharpFourProtThreeCore;
 use Honey\games\SharpTwoProtTwo\Core as SharpTwoProtTwoCore;
@@ -137,8 +139,12 @@ class Main extends PluginBase implements Listener{
 
 	public function onEnable(){
 		$this->getServer()->getPluginManager()->registerEvents($this, $this);
-		$this->getServer()->getPluginManager()->registerEvents(new SharpFourProtThreeCore($this),$this);
-		$this->getServer()->getPluginManager()->registerEvents(new SharpTwoProtTwoCore($this),$this);
+		$gameList = [new SharpTwoProtTwoCore($this),
+					new SharpFourProtThreeCore($this)
+					];
+		foreach($gameList as $game){
+			GameManager::registerGame($game->getName(), $game, $this, true);
+		}
 		$this->getLogger()->info("§a[はにー]§bプラグインを読み込んでいます...");
 		if(!file_exists($this->getDataFolder())){
 			$this->getLogger()->info("§a[はにー]§bコンフィグファイルを生成しています...");
@@ -163,6 +169,7 @@ class Main extends PluginBase implements Listener{
 		$this->status = self::STATUS_WAIT; //ステータス更新
 		$this->waitTime = $this->config->getNested("Game.wait-time");
 		new PlayerModule();
+		$this->getServer()->loadLevel($this->config->getNested("Level.wait-world"));
 		Generator::addGenerator(Honey::class, "honey"); //はにージェネレータを登録
 		//$this->pluginLoader->loadPlugin($this->getServer()->getPluginPath() . "HoneyMusic_v1.0.0");
 	}
@@ -271,13 +278,15 @@ class Main extends PluginBase implements Listener{
 
 	public function onDamage(EntityDamageEvent $event){
 		$player = $event->getEntity();
-		$name = $player->getName();
-		$level = $player->getLevel();
-		if($level->getFolderName() == $this->config->getNested("Level.default-world")){
-			$event->setCancelled();
-		}
-		if($level->getFolderName() == $this->config->getNested("Level.wait-world")){
-			$event->setCancelled();
+		if(!$player instanceof ItemEntity){
+			$name = $player->getName();
+			$level = $player->getLevel();
+			if($level->getFolderName() == $this->config->getNested("Level.default-world")){
+				$event->setCancelled();
+			}
+			if($level->getFolderName() == $this->config->getNested("Level.wait-world")){
+				$event->setCancelled();
+			}
 		}
 	}
 
@@ -297,11 +306,11 @@ class Main extends PluginBase implements Listener{
 					$player->addWindow($inventory);
 					break;
 				case 355: //ベッド(エントリーキャンセル用)
-					if(SharpFourProtThreeCore::getInstance()->isEntryGame($player)){
-						SharpFourProtThreeCore::getInstance()->cancelEntryGame($player);
+					if(GameManager::getGame(GameList::NAME_SHARP4PROT3)->isEntryGame($player)){
+						GameManager::getGame(GameList::NAME_SHARP4PROT3)->cancelEntryGame($player);
 					}
-					if(SharpTwoProtTwoCore::getInstance()->isEntryGame($player)){
-						SharpTwoProtTwoCore::getInstance()->cancelEntryGame($player);
+					if(GameManager::getGame(GameList::NAME_SHARP2PROT2)->isEntryGame($player)){
+						GameManager::getGame(GameList::NAME_SHARP2PROT2)->cancelEntryGame($player);
 					}
 					break;
 				case 369:
@@ -395,25 +404,27 @@ class Main extends PluginBase implements Listener{
 					switch($item->getId()){
 						case GameList::ICON_MINECRASH:
 							$event->setCancelled();
+							$player->removeAllWindows();
 							break;
 						case GameList::ICON_SHARP4PROT3:
 							$event->setCancelled();
-							if(SharpFourProtThreeCore::getInstance()->isEntryGame($player) || SharpTwoProtTwoCore::getInstance()->isEntryGame($player)){
+							if(GameManager::getGame(GameList::NAME_SHARP4PROT3)->isEntryGame($player) || GameManager::getGame(GameList::NAME_SHARP2PROT2)->isEntryGame($player)){
 								return;
 							}
-							SharpFourProtThreeCore::getInstance()->entryGame($player);
+							GameManager::getGame(GameList::NAME_SHARP4PROT3)->entryGame($player);
 							$player->removeAllWindows();
 							break;
 						case GameList::ICON_SHARP2PROT2:
 							$event->setCancelled();
-							if(SharpFourProtThreeCore::getInstance()->isEntryGame($player) || SharpTwoProtTwoCore::getInstance()->isEntryGame($player)){
+							if(GameManager::getGame(GameList::NAME_SHARP4PROT3)->isEntryGame($player) || GameManager::getGame(GameList::NAME_SHARP2PROT2)->isEntryGame($player)){
 								return;
 							}
-							SharpTwoProtTwoCore::getInstance()->entryGame($player);
+							GameManager::getGame(GameList::NAME_SHARP2PROT2)->entryGame($player);
 							$player->removeAllWindows();
 							break;
 						case GameList::ICON_FFA:
 							$event->setCancelled();
+							$player->removeAllWindows();
 							break;
 					}
 				}

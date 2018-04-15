@@ -48,4 +48,8 @@ class GameList{
 	public static function getIconList(){
 		return self::ICONLIST;
 	}
+
+	public static function getNameFromGameType(int $gameType){
+		return self::NAMELIST[$gameType] ?? null;
+	}
 }

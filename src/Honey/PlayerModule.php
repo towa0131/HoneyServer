@@ -84,6 +84,9 @@ class PlayerModule{
 		$book->setPageImage(0, $path . "logo.png");
 		$player->getInventory()->addItem($book);*/
 		$item = Item::get(276, 0, 1);
+		$item->setCustomName("§bゲームを選択");
+		$lore = ["右クリックでゲームを選択出来ます。"];
+		$item->setLore($lore);
 		ItemProvider::getInstance()->setUndroppable($item);
 		$player->getInventory()->addItem($item);
 		if($player->isOP()){
@@ -91,7 +94,11 @@ class PlayerModule{
 			$enchant = Enchantment::getEnchantment(9);
 			$enchant->setLevel(1);
 			$item->addEnchantment($enchant);
-			$item->setCustomName("MasterWand");
+			$item->setCustomName("§cサーバー設定");
+			$lore = ["サーバーの設定が出来ます。",
+					"§c§l管理者§r§o§5のみ使用可能です。"
+					];
+			$item->setLore($lore);
 			ItemProvider::getInstance()->setUndroppable($item);
 			$player->getInventory()->addItem($item);
 		}

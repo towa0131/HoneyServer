@@ -1,6 +1,6 @@
 <?php
 
-namespace Honey\games\SharpTwoProtTwo;
+namespace Honey\games\normal;
 
 use pocketmine\plugin\PluginBase;
 
@@ -17,13 +17,16 @@ use Honey\PlayerModule;
 class TeleportToLobbyTask extends PluginTask{
 
 	protected $owner;
+	/** @var Core $core */
+	protected $core;
 	/** @var Player $player */
 	protected $player;
 	/** @var Position $position */
 	protected $position;
 
-	public function __construct(PluginBase $owner, Player $player, Position $position){
+	public function __construct(PluginBase $owner, Core $core, Player $player, Position $position){
 		parent::__construct($owner);
+		$this->core = $core;
 		$this->player = $player;
 		$this->position = $position;
 	}
@@ -31,8 +34,9 @@ class TeleportToLobbyTask extends PluginTask{
 	public function onRun(int $currentTick){
 		if(Server::getInstance()->getPlayer($this->player->getName()) !== null){
 			$level = $this->player->getLevel();
-			if(strpos($level->getFolderName(), "PvPMap") !== false){
+			if($level->getFolderName() !== Main::getInstance()->config->getNested("Level.default-world")){
 				Server::getInstance()->unloadLevel($level);
+				$this->core->deletePvPLevel($level->getFolderName());
 			}
 			$this->player->teleport($this->position);
 			$this->player->setHealth(20);
