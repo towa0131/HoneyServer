@@ -169,7 +169,6 @@ class Main extends PluginBase implements Listener{
 		$this->status = self::STATUS_WAIT; //ステータス更新
 		$this->waitTime = $this->config->getNested("Game.wait-time");
 		new PlayerModule();
-		$this->getServer()->loadLevel($this->config->getNested("Level.wait-world"));
 		Generator::addGenerator(Honey::class, "honey"); //はにージェネレータを登録
 		//$this->pluginLoader->loadPlugin($this->getServer()->getPluginPath() . "HoneyMusic_v1.0.0");
 	}
