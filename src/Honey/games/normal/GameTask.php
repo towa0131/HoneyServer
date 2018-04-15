@@ -35,7 +35,7 @@ class GameTask extends PluginTask{
 
 		$time = $second >= 10 ? $minute . ":" . $second : $minute . ":0" . $second;
 
-		$message = "          §a----- " . $this->owner->getName() . " -----" .
+		$message = "             §a----- " . $this->owner->getName() . " -----" .
 				PHP_EOL .
 				"          §bTarget §f: " . $playerBName . 
 				PHP_EOL .
@@ -45,7 +45,7 @@ class GameTask extends PluginTask{
 				PHP_EOL .
 				"          §a-----------------------";
 		$this->playerA->sendPopup($message);
-		$message = "          §a----- " . $this->owner->getName() . " -----" .
+		$message = "             §a----- " . $this->owner->getName() . " -----" .
 				PHP_EOL .
 				"          §bTarget §f: " . $playerAName . 
 				PHP_EOL .

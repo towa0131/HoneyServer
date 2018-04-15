@@ -113,6 +113,7 @@ use Honey\games\GameManager;
 
 use Honey\games\SharpFourProtThree\Core as SharpFourProtThreeCore;
 use Honey\games\SharpTwoProtTwo\Core as SharpTwoProtTwoCore;
+use Honey\games\Bow\Core as BowCore;
 
 use Honey\plugin\HoneyPluginLoader;
 
@@ -140,7 +141,8 @@ class Main extends PluginBase implements Listener{
 	public function onEnable(){
 		$this->getServer()->getPluginManager()->registerEvents($this, $this);
 		$gameList = [new SharpTwoProtTwoCore($this),
-					new SharpFourProtThreeCore($this)
+					new SharpFourProtThreeCore($this),
+					new BowCore($this)
 					];
 		foreach($gameList as $game){
 			GameManager::registerGame($game->getName(), $game, $this, true);
@@ -305,11 +307,14 @@ class Main extends PluginBase implements Listener{
 					$player->addWindow($inventory);
 					break;
 				case 355: //ベッド(エントリーキャンセル用)
-					if(GameManager::getGame(GameList::NAME_SHARP4PROT3)->isEntryGame($player)){
-						GameManager::getGame(GameList::NAME_SHARP4PROT3)->cancelEntryGame($player);
-					}
-					if(GameManager::getGame(GameList::NAME_SHARP2PROT2)->isEntryGame($player)){
-						GameManager::getGame(GameList::NAME_SHARP2PROT2)->cancelEntryGame($player);
+					$gameNames = [GameList::NAME_SHARP4PROT3,
+									GameList::NAME_SHARP2PROT2,
+									GameList::NAME_BOW
+									];
+					foreach($gameNames as $game){
+						if(GameManager::getGame($game)->isEntryGame($player)){
+							GameManager::getGame($game)->cancelEntryGame($player);
+						}
 					}
 					break;
 				case 369:
@@ -398,33 +403,43 @@ class Main extends PluginBase implements Listener{
 			$type = $pk->transactionType;
 			if($type === InventoryTransactionPacket::TYPE_NORMAL || $type === InventoryTransactionPacket::TYPE_MISMATCH){
 				$actions = $pk->actions;
-				$item = $actions[0]->newItem;
-				if(ItemProvider::getInstance()->isSelectable($item)){
-					switch($item->getId()){
-						case GameList::ICON_MINECRASH:
-							$event->setCancelled();
-							$player->removeAllWindows();
-							break;
-						case GameList::ICON_SHARP4PROT3:
-							$event->setCancelled();
-							if(GameManager::getGame(GameList::NAME_SHARP4PROT3)->isEntryGame($player) || GameManager::getGame(GameList::NAME_SHARP2PROT2)->isEntryGame($player)){
-								return;
-							}
-							GameManager::getGame(GameList::NAME_SHARP4PROT3)->entryGame($player);
-							$player->removeAllWindows();
-							break;
-						case GameList::ICON_SHARP2PROT2:
-							$event->setCancelled();
-							if(GameManager::getGame(GameList::NAME_SHARP4PROT3)->isEntryGame($player) || GameManager::getGame(GameList::NAME_SHARP2PROT2)->isEntryGame($player)){
-								return;
-							}
-							GameManager::getGame(GameList::NAME_SHARP2PROT2)->entryGame($player);
-							$player->removeAllWindows();
-							break;
-						case GameList::ICON_FFA:
-							$event->setCancelled();
-							$player->removeAllWindows();
-							break;
+				if(isset($actions[0])){
+					$item = $actions[0]->newItem;
+					if(ItemProvider::getInstance()->isSelectable($item)){
+						switch($item->getId()){
+							case GameList::ICON_MINECRASH:
+								$event->setCancelled();
+								$player->removeAllWindows();
+								break;
+							case GameList::ICON_SHARP4PROT3:
+								$event->setCancelled();
+								if(GameManager::getGame(GameList::NAME_SHARP4PROT3)->isEntryGame($player) || GameManager::getGame(GameList::NAME_SHARP2PROT2)->isEntryGame($player) || GameManager::getGame(GameList::NAME_BOW)->isEntryGame($player)){
+									return;
+								}
+								GameManager::getGame(GameList::NAME_SHARP4PROT3)->entryGame($player);
+								$player->removeAllWindows();
+								break;
+							case GameList::ICON_SHARP2PROT2:
+								$event->setCancelled();
+								if(GameManager::getGame(GameList::NAME_SHARP4PROT3)->isEntryGame($player) || GameManager::getGame(GameList::NAME_SHARP2PROT2)->isEntryGame($player) || GameManager::getGame(GameList::NAME_BOW)->isEntryGame($player)){
+									return;
+								}
+								GameManager::getGame(GameList::NAME_SHARP2PROT2)->entryGame($player);
+								$player->removeAllWindows();
+								break;
+							case GameList::ICON_BOW:
+								$event->setCancelled();
+								if(GameManager::getGame(GameList::NAME_SHARP4PROT3)->isEntryGame($player) || GameManager::getGame(GameList::NAME_SHARP2PROT2)->isEntryGame($player) || GameManager::getGame(GameList::NAME_BOW)->isEntryGame($player)){
+									return;
+								}
+								GameManager::getGame(GameList::NAME_BOW)->entryGame($player);
+								$player->removeAllWindows();
+								break;
+							case GameList::ICON_FFA:
+								$event->setCancelled();
+								$player->removeAllWindows();
+								break;
+						}
 					}
 				}
 			}
