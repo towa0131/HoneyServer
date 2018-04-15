@@ -118,8 +118,8 @@ use Honey\plugin\HoneyPluginLoader;
 
 class Main extends PluginBase implements Listener{
 
-	const VERSION = "1.0.0";
-	const CODENAME = "Glass Rabbit";
+	const VERSION = "1.1.0";
+	const CODENAME = "Maple Syrup";
 
 	const STATUS_ENABLE = 0; //プラグインのロード中
 	const STATUS_WAIT = 1; //待機時間(ゲーム人数が揃っていない状態)
