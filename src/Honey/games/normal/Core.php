@@ -124,16 +124,19 @@ abstract class Core implements PotPvP, Listener{
 	}
 
 	public function endGame($winner, $loser, $timeUp = false, $quit = false){
-		$defaultLevel = Server::getInstance()->getLevelByName(Main::getInstance()->config->getNested("Level.default-world"));
 		$taskId = GameIdManager::getTaskIdByName($winner->getName());
-		$this->getEntryManager()->removeEntryPlayer($winner);
-		GameIdManager::removeGameId(GameIdManager::getGameIdByName($winner->getName()));
 		Server::getInstance()->getScheduler()->cancelTask($taskId);
+		$defaultLevel = Server::getInstance()->getLevelByName(Main::getInstance()->config->getNested("Level.default-world"));
 		$log = "§a[はにー]§bゲームが終了しました。";
+		/** EntryManager / GameIdManager */
+		$this->getEntryManager()->removeEntryPlayer($winner);
+		$this->getEntryManager()->removeEntryPlayer($loser);
+		GameIdManager::removeGameId(GameIdManager::getGameIdByName($winner->getName()));
 		$winner->sendMessage($log);
 		if(!$quit){
 			$loser->sendMessage($log);
 		}
+
 		if(!$timeUp){
 			$log = "§c=== " . $this->getName() . " ===" .
 				PHP_EOL .
@@ -161,6 +164,7 @@ abstract class Core implements PotPvP, Listener{
 			}
 			return true;
 		}
+
 		$log = "§c=== " . $this->getName() . " ===" .
 			PHP_EOL .
 			"§a          Draw" .
