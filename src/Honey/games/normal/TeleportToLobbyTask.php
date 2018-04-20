@@ -34,7 +34,7 @@ class TeleportToLobbyTask extends PluginTask{
 	public function onRun(int $currentTick){
 		if(Server::getInstance()->getPlayer($this->player->getName()) !== null){
 			$level = $this->player->getLevel();
-			if($level->getFolderName() !== Main::getInstance()->config->getNested("Level.default-world") || $level->getFolderName() !== Main::getInstance()->config->getNested("Level.wait-world")){
+			if($level->getFolderName() !== Main::getInstance()->config->getNested("Level.default-world") && $level->getFolderName() !== Main::getInstance()->config->getNested("Level.wait-world")){
 				Server::getInstance()->unloadLevel($level);
 				$this->core->deletePvPLevel($level->getFolderName());
 			}
