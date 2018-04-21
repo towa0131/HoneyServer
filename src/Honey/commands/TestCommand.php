@@ -5,6 +5,8 @@ namespace Honey\commands;
 use pocketmine\command\CommandSender;
 use pocketmine\command\PluginCommand;
 
+use pocketmine\command\utils\InvalidCommandSyntaxException;
+
 use pocketmine\Player;
 use pocketmine\Server;
 
@@ -20,14 +22,15 @@ class TestCommand extends PluginCommand{
 	public function __construct(PluginBase $owner){
 		parent::__construct("test", $owner);
 		$this->setDescription("マントを装着します。");
+		$this->setUsage("/test <CapeName>");
 		$this->setPermission("admin.command");
 	}
 
 	public function execute(CommandSender $sender, string $commandLabel, array $args){
-		if(!isset($args[0])){
-			$sender->sendMessage("§a[はにい]§4使用方法: /test <CapeName>");
-			return false;
+		if(count($args) === 0){
+			throw new InvalidCommandSyntaxException();
 		}
+
 		$cape = @file_get_contents(__DIR__."/../entity/capes/" . $args[0] . ".txt");
 		if($cape){
 			$skin = $sender->getSkin();
@@ -37,11 +40,9 @@ class TestCommand extends PluginCommand{
 							$skin->getGeometryName(),
 							$skin->getGeometryData()), "", "");
 			$sender->sendMessage("§a[はにい]§b" . $args[0] . "を装着しました。");
-		}else{
-			$sender->sendMessage("§a[はにー]§4マントが存在しません。");
-			return false;
+			return true;
 		}
-		return true;
+		$sender->sendMessage("§a[はにー]§4マントが存在しません。");
+		return false;
 	}
-
 }

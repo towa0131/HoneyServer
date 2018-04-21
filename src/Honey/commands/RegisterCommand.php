@@ -25,6 +25,7 @@ class RegisterCommand extends PluginCommand{
 	public function __construct(PluginBase $owner){
 		parent::__construct("register", $owner);
 		$this->setDescription("登録フォームを呼び出します。");
+		$this->setUsage("/register");
 	}
 
 	public function execute(CommandSender $sender, string $commandLabel, array $args){
