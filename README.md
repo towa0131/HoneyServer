@@ -4,7 +4,7 @@ __Open source [HoneyServer](https://honey-mc.net)'s plugin for PocketMine-MP.__
 ### Stats
 
 | Info |  |
-|:---|:---:|
+|:---|:---|
 | MCBE Version | 1.2.10 |
 | Version | 1.0.0 |
 | CodeName | Glass Rabbit |
@@ -19,7 +19,7 @@ __Open source [HoneyServer](https://honey-mc.net)'s plugin for PocketMine-MP.__
 | Port | __19132__ |
 
 ### Links
- * [Web](https://honey-mc.net) - The server's web page.
+ * [Web](https://honey-mc.net) - Web page of the server.
  * [Wiki](http://seesaawiki.jp/honey-mc/) - You can get a lot of information!
  * [Lobi](https://lobi.co/invite/ic385) - Community of the server.
  * [Discord](https://discord.gg/Qe8tE9N) - Chat on discord.
