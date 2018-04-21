@@ -17,10 +17,10 @@ use pocketmine\item\Item;
 use pocketmine\Player;
 use pocketmine\Server;
 
-use Honey\Main;
-
-use Honey\PlayerModule;
+use Honey\ConfigManager;
 use Honey\ItemProvider;
+use Honey\Main;
+use Honey\PlayerModule;
 
 use Honey\account\AccountManager;
 
@@ -72,13 +72,13 @@ abstract class Core implements PotPvP, Listener{
 		$level = $player->getLevel();
 		if(GameIdManager::hasPlayer($name)){
 			if($level->getFolderName() === GameIdManager::getLevelByName($name)->getFolderName()){
-				$waitLevel = Server::getInstance()->getLevelByName(Main::getInstance()->config->getNested("Level.wait-world"));
+				$waitLevel = Server::getInstance()->getLevelByName(ConfigManager::get("config")->getNested("Level.wait-world"));
 				$event->setRespawnPosition($waitLevel->getSafeSpawn());
 				$player->teleport($waitLevel->getSafeSpawn());
 				return true;
 			}
-			$event->setRespawnPosition(Server::getInstance()->getLevelByName(Main::getInstance()->config->getNested("Level.default-world"))->getSafeSpawn());
-			$player->teleport(Server::getInstance()->getLevelByName(Main::getInstance()->config->getNested("Level.default-world"))->getSafeSpawn());
+			$event->setRespawnPosition(Server::getInstance()->getLevelByName(ConfigManager::get("config")->getNested("Level.default-world"))->getSafeSpawn());
+			$player->teleport(Server::getInstance()->getLevelByName(ConfigManager::get("config")->getNested("Level.default-world"))->getSafeSpawn());
 			return true;
 		}
 		return false;
@@ -107,8 +107,8 @@ abstract class Core implements PotPvP, Listener{
 	public function startGame(Player $playerA, Player $playerB){
 		$playerA->sendMessage("§a[はにー]§bまもなく試合が始まります。");
 		$playerB->sendMessage("§a[はにー]§bまもなく試合が始まります。");
-		if(Server::getInstance()->loadLevel(Main::getInstance()->config->getNested("Level.wait-world")) != false){
-			$level = Server::getInstance()->getLevelByName(Main::getInstance()->config->getNested("Level.wait-world"));
+		if(Server::getInstance()->loadLevel(ConfigManager::get("config")->getNested("Level.wait-world")) != false){
+			$level = Server::getInstance()->getLevelByName(ConfigManager::get("config")->getNested("Level.wait-world"));
 			$pvplevel = $this->createPvPLevel(true);
 			$playerA->teleport($level->getSafeSpawn());
 			$playerB->teleport($level->getSafeSpawn());
@@ -126,7 +126,7 @@ abstract class Core implements PotPvP, Listener{
 	public function endGame($winner, $loser, $timeUp = false, $quit = false){
 		$taskId = GameIdManager::getTaskIdByName($winner->getName());
 		Server::getInstance()->getScheduler()->cancelTask($taskId);
-		$defaultLevel = Server::getInstance()->getLevelByName(Main::getInstance()->config->getNested("Level.default-world"));
+		$defaultLevel = Server::getInstance()->getLevelByName(ConfigManager::get("config")->getNested("Level.default-world"));
 		$log = "§a[はにー]§bゲームが終了しました。";
 		/** EntryManager / GameIdManager */
 		$this->getEntryManager()->removeEntryPlayer($winner);

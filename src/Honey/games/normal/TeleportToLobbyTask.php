@@ -11,7 +11,7 @@ use pocketmine\Server;
 
 use pocketmine\level\Position;
 
-use Honey\Main;
+use Honey\ConfigManager;
 use Honey\PlayerModule;
 
 class TeleportToLobbyTask extends PluginTask{
@@ -34,7 +34,7 @@ class TeleportToLobbyTask extends PluginTask{
 	public function onRun(int $currentTick){
 		if(Server::getInstance()->getPlayer($this->player->getName()) !== null){
 			$level = $this->player->getLevel();
-			if($level->getFolderName() !== Main::getInstance()->config->getNested("Level.default-world") && $level->getFolderName() !== Main::getInstance()->config->getNested("Level.wait-world")){
+			if($level->getFolderName() !== ConfigManager::get("config")->getNested("Level.default-world") && $level->getFolderName() !== ConfigManager::get("config")->getNested("Level.wait-world")){
 				Server::getInstance()->unloadLevel($level);
 				$this->core->deletePvPLevel($level->getFolderName());
 			}
@@ -43,7 +43,7 @@ class TeleportToLobbyTask extends PluginTask{
 			$this->player->getInventory()->clearAll();
 			$this->player->getCursorInventory()->clearAll();
 			$this->player->removeAllEffects();
-			$this->player->setSpawn(Server::getInstance()->getLevelByName(Main::getInstance()->config->getNested("Level.default-world"))->getSafeSpawn());
+			$this->player->setSpawn(Server::getInstance()->getLevelByName(ConfigManager::get("config")->getNested("Level.default-world"))->getSafeSpawn());
 			PlayerModule::getInstance()->sendLobbyItem($this->player);
 		}
 	}

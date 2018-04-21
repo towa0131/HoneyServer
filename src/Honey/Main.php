@@ -151,14 +151,19 @@ class Main extends PluginBase implements Listener{
 		if(!file_exists($this->getDataFolder())){
 			$this->getLogger()->info("§a[はにー]§bコンフィグファイルを生成しています...");
 			mkdir($this->getDataFolder() , 0777);
-			$this->saveDefaultConfig();
+			$this->saveResource("config.yml");
+			$this->saveResource("minecrash.yml");
+			$this->saveResource("1vs1.yml");
 		}
-		$this->config = new Config($this->getDataFolder() . "config.yml", Config::YAML);
-		DB::setConfig($this->config->getNested("DB.address"),
-			$this->config->getNested("DB.user"),
-			$this->config->getNested("DB.password"),
-			$this->config->getNested("DB.database"),
-			$this->config->getNested("DB.timeout"));
+		ConfigManager::register("config", new Config($this->getDataFolder() . "config.yml", Config::YAML));
+		ConfigManager::register("minecrash", new Config($this->getDataFolder() . "minecrash.yml", Config::YAML));
+		ConfigManager::register("1vs1", new Config($this->getDataFolder() . "1vs1.yml", Config::YAML));
+		DB::setConfig(ConfigManager::get("config")->getNested("DB.address"),
+			ConfigManager::get("config")->getNested("DB.user"),
+			ConfigManager::get("config")->getNested("DB.password"),
+			ConfigManager::get("config")->getNested("DB.database"),
+			ConfigManager::get("config")->getNested("DB.timeout")
+		);
 		self::$instance = $this;
 		$this->pluginLoader = new HoneyPluginLoader();
 		$commands = new CommandManager($this);
@@ -169,7 +174,7 @@ class Main extends PluginBase implements Listener{
 		$this->time = 0;
 		$this->loginTime = [];
 		$this->status = self::STATUS_WAIT; //ステータス更新
-		$this->waitTime = $this->config->getNested("Game.wait-time");
+		$this->waitTime = ConfigManager::get("minecrash")->getNested("Game.wait-time");
 		new PlayerModule();
 		Generator::addGenerator(Honey::class, "honey"); //はにージェネレータを登録
 		//$this->pluginLoader->loadPlugin($this->getServer()->getPluginPath() . "HoneyMusic_v1.0.0");
@@ -178,7 +183,7 @@ class Main extends PluginBase implements Listener{
 	public function onMain(){
 		switch($this->status){
 			case self::STATUS_WAIT:
-				if(count($this->getServer()->getOnlinePlayers()) >= $this->config->getNested("Game.start-players")){
+				if(count($this->getServer()->getOnlinePlayers()) >= ConfigManager::get("minecrash")->getNested("Game.start-players")){
 					//ゲーム開始人数が揃ったらゲームロード状態にステータスが更新
 					$this->status = self::STATUS_LOAD;
 				}
@@ -186,7 +191,7 @@ class Main extends PluginBase implements Listener{
 			case self::STATUS_LOAD:
 				$this->waitTime--;
 				switch($this->waitTime){ //ゲームロード時間が特定の時間になったときの処理
-					case $this->config->getNested("Game.wait-time"):
+					case ConfigManager::get("minecrash")->getNested("Game.wait-time"):
 						//人数が揃ったことをプレイヤーに通知
 						foreach($this->getServer()->getOnlinePlayers() as $p){
 							
@@ -262,7 +267,7 @@ class Main extends PluginBase implements Listener{
 			}
 		}
 		$player->getInventory()->clearAll();
-		$player->teleport($this->getServer()->getLevelByName($this->config->getNested("Level.default-world"))->getSafeSpawn());
+		$player->teleport($this->getServer()->getLevelByName(ConfigManager::get("config")->getNested("Level.default-world"))->getSafeSpawn());
 		$player->setGamemode(2);
 		$player->setHealth(20);
 		$player->setFood(20);
@@ -282,10 +287,10 @@ class Main extends PluginBase implements Listener{
 		if(!$player instanceof ItemEntity){
 			$name = $player->getName();
 			$level = $player->getLevel();
-			if($level->getFolderName() == $this->config->getNested("Level.default-world")){
+			if($level->getFolderName() == ConfigManager::get("config")->getNested("Level.default-world")){
 				$event->setCancelled();
 			}
-			if($level->getFolderName() == $this->config->getNested("Level.wait-world")){
+			if($level->getFolderName() == ConfigManager::get("config")->getNested("Level.wait-world")){
 				$event->setCancelled();
 			}
 		}
@@ -300,7 +305,7 @@ class Main extends PluginBase implements Listener{
 		$z = $block->getZ();
 		$item = $player->getInventory()->getItemInHand();
 		$level = $player->getLevel();
-		if($level->getFolderName() == $this->config->getNested("Level.default-world")){
+		if($level->getFolderName() == ConfigManager::get("config")->getNested("Level.default-world")){
 			switch($item->getId()){
 				case 276: //ダイヤの剣
 					$inventory = new SelectGameInventory($this, $player);
@@ -353,8 +358,8 @@ class Main extends PluginBase implements Listener{
 				case FormIds::FORM_REGISTER:
 					if($formdata[1] == $formdata[2]){
 						//TODO : pthreadを利用した非同期での処理に変更予定
-						$lang = $this->config->getNested("User.default-lang");
-						$honey = (int)$this->config->getNested("User.default-honey");
+						$lang = ConfigManager::get("config")->getNested("User.default-lang");
+						$honey = (int) ConfigManager::get("config")->getNested("User.default-honey");
 						$skin = bin2hex($player->getSkin()->getSkinData());
 						$passwd = trim($formdata[1]);
 						if($passwd == null){ //×対策
@@ -362,8 +367,8 @@ class Main extends PluginBase implements Listener{
 							PlayerModule::getInstance()->sendForm($player, $form, FormIds::FORM_REGISTER);
 							return;
 						}
-						for($i=0;$i<=$this->config->getNested("Password.hash-count");$i++){ //ストレッチングを行うことによって、パスワードをより安全に保存できるようにする
-							$passwd = hash($this->config->getNested("Password.hash-type"), $passwd);
+						for($i=0;$i<= ConfigManager::get("config")->getNested("Password.hash-count");$i++){ //ストレッチングを行うことによって、パスワードをより安全に保存できるようにする
+							$passwd = hash(ConfigManager::get("config")->getNested("Password.hash-type"), $passwd);
 						}
 						$create = AccountManager::registerAccount($xuid, $name, $ip, $passwd, $honey, $lang, $skin, $this->loginTime[$name]);
 						if($create){
@@ -451,7 +456,7 @@ class Main extends PluginBase implements Listener{
 		$item = $event->getItem();
 		$name = $player->getName();
 		$level = $player->getLevel();
-		if($level->getFolderName() == $this->config->getNested("Level.default-world")){
+		if($level->getFolderName() == ConfigManager::get("config")->getNested("Level.default-world")){
 			$event->setCancelled();
 		}
 		if(ItemProvider::getInstance()->isUndroppable($item)){
