@@ -8,7 +8,7 @@ __Open source [HoneyServer](https://honey-mc.net)'s plugin for PocketMine-MP.__
 | MCBE Version | 1.2.10 |
 | Version | 1.0.0 |
 | CodeName | Glass Rabbit |
-| Supported API Version | - 1.13.0 <br> - 2.0.0 <br> - 3.0.0 <br> - 3.0.0-ALPHA9 |
+| Supported API Version | - 3.0.0 <br> - 3.0.0-ALPHA9 |
 | Supported Server Software | [DragMine](https://github.com/DragMineTeam/DragMine) |
 
 ### My Server
