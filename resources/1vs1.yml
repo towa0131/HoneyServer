@@ -1,0 +1,14 @@
+---
+#はにー鯖設定ファイル
+#trueで有効になります
+#falseで無効になります
+
+#ワールドの設定
+Level:
+ #デフォルトワールド名
+ default-world: world
+ #待機ワールド
+ wait-world: waitlobby
+ #TODO : ゲームワールドの管理設定
+
+...

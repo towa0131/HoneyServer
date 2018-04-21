@@ -38,91 +38,18 @@ User:
  #初期はにい
  default-honey: 0
 
-#パスワード管理設定
-Password:
- #ハッシュの種類の設定
- hash-type: md5
- #ハッシュ回数
- hash-count: 1000
-
-#ゲームの設定
-Game:
- #ゲーム開始人数
- start-players: 16
- #ゲーム開始時間(秒)(人数が揃ってからゲーム開始までの時間)
- wait-time: 60
- #1チームの最大人数
- max-players: 8
- #ゲーム終了後に再起動
- server-restart: false
-
 #ワールドの設定
 Level:
  #デフォルトワールド名
  default-world: world
  #待機ワールド
  wait-world: waitlobby
- #TODO : ゲームワールドの管理設定
 
-#ポイントの管理
-Point:
- #石炭鉱石
- coal-ore: 1
- #鉄鉱石
- iron-ore: 2
- #銅鉱石
- copper-ore: 3
- #銀鉱石
- silver-ore: 5
- #金鉱石
- gold-ore: 8
- #ダイヤモンド鉱石
- diamond-ore: 10
- #ラピスラズリ鉱石
- lapislazuli-ore: 5
- #レッドストーン鉱石
- redstone-ore: 2
- #エメラルド鉱石
- emerald-ore: 15
- #ルビー鉱石
- ruby-ore: 10
- #サファイア鉱石
- sapphire-ore: 9
-
-#鉱石の換金価額
-#注意 : この換金価額は価格変動が行われる前のデフォルトの物であり、実際にはこの値ではありません。
-#また、価格変動が無効化されていると以下の換金価額が適用されます。
-Exchange:
- #価格変動の有効化
- price-change: true
- #価格変動の間隔(秒)(価格変動が有効化されてるときのみ有効)
- price-change-time: 60
- #価格変動の範囲(デフォルトからの変動範囲)
- #注意 : デフォルト値からマイナスになる変動は行われません。
- price-change-range: 500
- #石炭鉱石
- coal-ore: 100
- #鉄鉱石
- iron-ore: 300
- #銅鉱石
- copper-ore: 500
- #銀鉱石
- silver-ore: 1000
- #金鉱石
- gold-ore: 2000
- #ダイヤモンド鉱石
- diamond-ore: 6000
- #ラピスラズリ鉱石
- lapislazuli-ore: 1000
- #レッドストーン鉱石
- redstone-ore: 200
- #エメラルド鉱石
- emerald-ore: 2500
- #ルビー鉱石
- ruby-ore: 7000
- #サファイア鉱石
- sapphire-ore: 6500
- #琥珀
- amber-ore: 5000
+#パスワード管理設定
+Password:
+ #ハッシュの種類の設定
+ hash-type: md5
+ #ハッシュ回数
+ hash-count: 1000
 
 ...
