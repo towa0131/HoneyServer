@@ -13,14 +13,9 @@ commands:
  reconnect:
   description: "サーバーへ再接続します"
   usage: "/reconnect"
-  aliases: [rc]
- box:
-  description: "アイテムボックスを開きます(ロビーでのみ使えます)"
-  usage: "/box"
  stats:
   description: "ユーザーのステータスを確認します"
   usage: "/stats <name>"
-  aliases: [stat]
  report:
   description: "違反ユーザーを報告します"
   usage: "/report"
@@ -28,6 +23,7 @@ commands:
  guild:
   description: "ギルド関係のコマンドです"
   usage: "/guild [join|quit|create|invite|deny|destroy]"
+  aliases: [g]
 permissions:
  admin.command:
   default: op
