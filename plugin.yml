@@ -10,9 +10,6 @@ authors: [towa0131]
 description: HoneyServer System Plugin
 website: https://honey-mc.net
 commands:
- loadreceipes:
-  description: "レシピを再ロードします"
-  usage: "/loadrecipes"
  reconnect:
   description: "サーバーへ再接続します"
   usage: "/reconnect"
@@ -20,9 +17,9 @@ commands:
  box:
   description: "アイテムボックスを開きます(ロビーでのみ使えます)"
   usage: "/box"
- status:
+ stats:
   description: "ユーザーのステータスを確認します"
-  usage: "/status <name>"
+  usage: "/stats <name>"
   aliases: [stat]
  report:
   description: "違反ユーザーを報告します"
@@ -31,10 +28,6 @@ commands:
  guild:
   description: "ギルド関係のコマンドです"
   usage: "/guild [join|quit|create|invite|deny|destroy]"
- entry:
-  description: "ゲームへ参加します"
-  usage: "/entry"
-  aliases: [join]
 permissions:
  admin.command:
   default: op
