@@ -8,6 +8,7 @@ use pocketmine\Server;
 use pocketmine\plugin\PluginBase;
 
 use Honey\commands\RegisterCommand;
+use Honey\commands\ReconnectCommand;
 use Honey\commands\TestCommand;
 
 class CommandManager{
@@ -24,6 +25,7 @@ class CommandManager{
 	   */
 	public function registerCommands(PluginBase $owner){
 		Server::getInstance()->getCommandMap()->register(RegisterCommand::class, new RegisterCommand($owner));
+		Server::getInstance()->getCommandMap()->register(RegisterCommand::class, new ReconnectCommand($owner));
 		Server::getInstance()->getCommandMap()->register(TestCommand::class, new TestCommand($owner));
 	}
 }
