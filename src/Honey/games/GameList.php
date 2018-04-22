@@ -22,25 +22,19 @@ class GameList{
 	const ICON_BOW = 261;
 	const ICON_FFA = 346;
 
-	const GAMELIST = [self::GAME_MINECRASH,
-					self::GAME_SHARP4PROT3,
+	const GAMELIST = [self::GAME_SHARP4PROT3,
 					self::GAME_SHARP2PROT2,
-					self::GAME_BOW,
-					self::GAME_FFA
+					self::GAME_BOW
 					];
 
-	const NAMELIST = [self::NAME_MINECRASH,
-					self::NAME_SHARP4PROT3,
+	const NAMELIST = [self::NAME_SHARP4PROT3,
 					self::NAME_SHARP2PROT2,
-					self::NAME_BOW,
-					self::NAME_FFA
+					self::NAME_BOW
 					];
 
-	const ICONLIST = [self::ICON_MINECRASH,
-					self::ICON_SHARP4PROT3,
+	const ICONLIST = [self::ICON_SHARP4PROT3,
 					self::ICON_SHARP2PROT2,
-					self::ICON_BOW,
-					self::ICON_FFA
+					self::ICON_BOW
 					];
 
 	public static function getGameList(){

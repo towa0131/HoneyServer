@@ -16,10 +16,10 @@ class EntryManager{
 		$this->owner = $owner;
 	}
 
-	public function addEntryPlayer(Player $player){
+	public function addEntryPlayer(Player $player, array $duel = [], bool $isDuel = false){
 		/* NEW ALGO */
-		$new = isset($this->entryPlayers[0]) ? true : false;
-		if($new){
+		$new = isset($this->entryPlayers[0]);
+		if($new && !$isDuel){
 			$num = 0;
 			foreach($this->entryPlayers as &$entryPlayer){
 				foreach($entryPlayer as &$ep){
@@ -38,12 +38,20 @@ class EntryManager{
 			if(!is_null($this->entryPlayers[ceil($num / 2) - 1][$num % 2])){
 				$this->owner->startGame(Server::getInstance()->getPlayer($this->entryPlayers[ceil($num / 2) - 1][0]), Server::getInstance()->getPlayer($this->entryPlayers[ceil($num / 2) - 1][1]));
 			}
-		}else{
+		}elseif(!$isDuel){
 			for($i=0;$i<10;$i++){
 				$this->entryPlayers[] = [null, null];
 			}
 			$this->entryPlayers[0][0] = $player->getName();
 			$this->owner->onEntry($player);
+		}else{
+			for($i=10;$i<100;$i++){
+				if(!isset($this->entryPlayers[$i][0]) && !isset($this->entryPlayers[$i][1])){
+					$this->entryPlayers[$i] = [$duel[0]->getName(), $duel[1]->getName()];
+					$this->owner->startGame($duel[0], $duel[1]);
+					break;
+				}
+			}
 		}
 		return true;
 	}

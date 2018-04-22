@@ -108,6 +108,7 @@ use Honey\event\system\SystemErrorEvent;
 
 use Honey\item\MagicItem;
 
+use Honey\games\DuelManager;
 use Honey\games\GameList;
 use Honey\games\GameManager;
 
@@ -274,6 +275,17 @@ class Main extends PluginBase implements Listener{
 		PlayerModule::getInstance()->sendLobbyItem($player);
 	}
 
+	public function onQuit(PlayerQuitEvent $event){
+		$player = $event->getPlayer();
+		$name = $player->getName();
+		if(DuelManager::hasDuelRequestSent($name)){
+			DuelManager::removeDuelRequest($name);
+		}
+		if(DuelManager::hasDuelRequest($name)){
+			DuelManager::removeDuelRequest($name);
+		}
+	}
+
 	public function onBreak(BlockBreakEvent $event){
 		$player = $event->getPlayer();
 		$block = $event->getBlock();
@@ -308,8 +320,13 @@ class Main extends PluginBase implements Listener{
 		if($level->getFolderName() == ConfigManager::get("config")->getNested("Level.default-world")){
 			switch($item->getId()){
 				case 276: //ダイヤの剣
-					$inventory = new SelectGameInventory($this, $player);
-					$player->addWindow($inventory);
+					if(DuelManager::hasDuelRequestSent($name)){
+						$player->sendMessage("§a[はにー]§cデュエルリクエストを送信しているので参加できません。");
+						$player->sendMessage("§a>> §c/duel cancel§aでリクエストをキャンセルしてください。");
+					}else{
+						$inventory = new SelectGameInventory($this, $player);
+						$player->addWindow($inventory);
+					}
 					break;
 				case 355: //ベッド(エントリーキャンセル用)
 					$gameNames = [GameList::NAME_SHARP4PROT3,
@@ -410,7 +427,12 @@ class Main extends PluginBase implements Listener{
 				$actions = $pk->actions;
 				if(isset($actions[0])){
 					$item = $actions[0]->newItem;
-					if(ItemProvider::getInstance()->isSelectable($item)){
+					if(ItemProvider::getInstance()->isSelectable($item) || ItemProvider::getInstance()->isDuelable($item)){
+						if(ItemProvider::getInstance()->isDuelable($item)){
+							$sender = $this->getServer()->getPlayer($item->getNamedTag()->sender);
+							$target = $this->getServer()->getPlayer($item->getNamedTag()->target);
+							$sender->sendMessage("§a[はにー]§b" . $target->getName() . "§eへデュエルリクエストを送信しました。");
+						}
 						switch($item->getId()){
 							case GameList::ICON_MINECRASH:
 								$event->setCancelled();
@@ -421,7 +443,13 @@ class Main extends PluginBase implements Listener{
 								if(GameManager::getGame(GameList::NAME_SHARP4PROT3)->isEntryGame($player) || GameManager::getGame(GameList::NAME_SHARP2PROT2)->isEntryGame($player) || GameManager::getGame(GameList::NAME_BOW)->isEntryGame($player)){
 									return;
 								}
-								GameManager::getGame(GameList::NAME_SHARP4PROT3)->entryGame($player);
+								if(ItemProvider::getInstance()->isDuelable($item)){
+									$target->sendMessage("§a[はにー]§b" . $sender->getName() . "§eから§b§lSharp3Prot3§r§eのデュエルリクエストを受けました。");
+									$target->sendMessage("§a>>開始するには§c/duel accept§aと入力してください。");
+									DuelManager::addDuelRequest($sender->getName(), $target->getName(), GameList::NAME_SHARP4PROT3);
+								}else{
+									GameManager::getGame(GameList::NAME_SHARP4PROT3)->entryGame($player);
+								}
 								$player->removeAllWindows();
 								break;
 							case GameList::ICON_SHARP2PROT2:
@@ -429,7 +457,14 @@ class Main extends PluginBase implements Listener{
 								if(GameManager::getGame(GameList::NAME_SHARP4PROT3)->isEntryGame($player) || GameManager::getGame(GameList::NAME_SHARP2PROT2)->isEntryGame($player) || GameManager::getGame(GameList::NAME_BOW)->isEntryGame($player)){
 									return;
 								}
-								GameManager::getGame(GameList::NAME_SHARP2PROT2)->entryGame($player);
+								
+								if(ItemProvider::getInstance()->isDuelable($item)){
+									$target->sendMessage("§a[はにー]§b" . $sender->getName() . "§eから§b§lSharp2Prot2§r§eのデュエルリクエストを受けました。");
+									$target->sendMessage("§a>>開始するには§c/duel accept§aと入力してください。");
+									DuelManager::addDuelRequest($sender->getName(), $target->getName(), GameList::NAME_SHARP2PROT2);
+								}else{
+									GameManager::getGame(GameList::NAME_SHARP2PROT2)->entryGame($player);
+								}
 								$player->removeAllWindows();
 								break;
 							case GameList::ICON_BOW:
@@ -437,7 +472,13 @@ class Main extends PluginBase implements Listener{
 								if(GameManager::getGame(GameList::NAME_SHARP4PROT3)->isEntryGame($player) || GameManager::getGame(GameList::NAME_SHARP2PROT2)->isEntryGame($player) || GameManager::getGame(GameList::NAME_BOW)->isEntryGame($player)){
 									return;
 								}
-								GameManager::getGame(GameList::NAME_BOW)->entryGame($player);
+								if(ItemProvider::getInstance()->isDuelable($item)){
+									$target->sendMessage("§a[はにー]§b" . $sender->getName() . "§eから§b§lBow§r§eのデュエルリクエストを受けました。");
+									$target->sendMessage("§a>>開始するには§c/duel accept§aと入力してください。");
+									DuelManager::addDuelRequest($sender->getName(), $target->getName(), GameList::NAME_BOW);
+								}else{
+									GameManager::getGame(GameList::NAME_BOW)->entryGame($player);
+								}
 								$player->removeAllWindows();
 								break;
 							case GameList::ICON_FFA:

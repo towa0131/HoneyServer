@@ -181,14 +181,18 @@ abstract class Core implements PotPvP, Listener{
 		return true;
 	}
 
-	public function entryGame(Player $player){
-		$player->getInventory()->clearAll();
-		$item = Item::get(355, 14, 1);
-		ItemProvider::getInstance()->setUndroppable($item);
-		$item->setCustomName("§cエントリーをキャンセル");
-		$player->getInventory()->setItem(20, $item);
-		$player->getInventory()->setHotbarSlotIndex(4, 20);
-		$this->getEntryManager()->addEntryPlayer($player);
+	public function entryGame(Player $player, array $duel = [], bool $isDuel = false){
+		if($isDuel){
+			$this->getEntryManager()->addEntryPlayer($player, $duel, true);
+		}else{
+			$player->getInventory()->clearAll();
+			$item = Item::get(355, 14, 1);
+			ItemProvider::getInstance()->setUndroppable($item);
+			$item->setCustomName("§cエントリーをキャンセル");
+			$player->getInventory()->setItem(20, $item);
+			$player->getInventory()->setHotbarSlotIndex(4, 20);
+			$this->getEntryManager()->addEntryPlayer($player);
+		}
 	}
 
 	public function cancelEntryGame(Player $player){

@@ -13,6 +13,8 @@ use pocketmine\nbt\tag\LongTag;
 use pocketmine\nbt\tag\ByteTag;
 use pocketmine\nbt\NBT;
 
+use pocketmine\Player;
+
 class ItemProvider{
 
 	private static $instance;
@@ -55,6 +57,28 @@ class ItemProvider{
 		$tag = $item->getNamedTag();
 		if(isset($tag->type)){
 			if($tag->type == "Selectable"){
+				return true;
+			}
+		}
+		return false;
+	}
+
+	public function setDuelable(Item $item, Player $sender, Player $target){
+		if($item->hasCompoundTag()){
+			$tag = $item->getNamedTag();
+		}else{
+			$tag = new CompoundTag("", []);
+		}
+		$tag->type = new StringTag("type","Duelable");
+		$tag->sender = new StringTag("sender", $sender->getName());
+		$tag->target = new StringTag("target", $target->getName());
+		$item->setNamedTag($tag);
+	}
+
+	public function isDuelable(Item $item){
+		$tag = $item->getNamedTag();
+		if(isset($tag->type)){
+			if($tag->type == "Duelable"){
 				return true;
 			}
 		}
